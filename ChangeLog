@@ -1,0 +1,28 @@
+
+Revision 1.0-0 (2010-12-30)
+ * First public release of the package
+ * Illustrated the package with example taken from Durbin & Koopman book
+ * Added support for ARIMA models (currently only ARMA has been implemented)
+
+Revision 0.3-0 (2010-12-28)
+ * Fixed functions to check their arguments
+ * Added AIC and BIC computation for fitted models
+ * Added forecast simulation function (current implementation is slow but will be improved)
+ * Added MSE and sigma fitting functions (in addition to MLE)
+ * Added support for prediction intervals
+
+Revision 0.2-0 (2010-12-27)
+ * Fixed handling of the selection matrix Rt
+ * Fixed a bug in timevar.fun
+ * Added support for exact diffuse initialization (with KFAS back-end)
+ * Added MLE fitting function (using optim(), w/ BFGS optimization)
+ * Renamed "simulate" to "forecast" to avoid confusion with simulation
+   methods for exponential family models
+
+Revision 0.1-0 (2010-12-20)
+ * Init package
+ * Added helper functions for polynomial, dseasonal, tseasonal
+ * Added regression and general support for time-varying models
+ * Added filtering and smoothing with KFAS, FKF and dlm back-ends
+ * Added notion of components (currently only the expectation is supported)
+ * Added preliminary print function
