@@ -6,6 +6,9 @@
 \alias{dlmodeler.filter.dlm}
 \alias{dlmodeler.smooth.KFAS}
 \alias{dlmodeler.smooth.dlm}
+\alias{dlmodeler.build.unknowns}
+\alias{dlmodeler.build.function}
+\alias{dlmodeler.countweekdays}
 \title{
 For internal use only
 }

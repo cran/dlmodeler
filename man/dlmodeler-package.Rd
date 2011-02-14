@@ -11,30 +11,35 @@ forecasting of Generalized Dynamic Linear Models (DLMs).
 
 It includes functions to name and extract components
 of a DLM, and provides a unified interface
-compatible with other state-space packages including: \code{KFAS},
-\code{FKF} and \code{dlm}.
+compatible with other state-space packages including: \code{dlm},
+\code{KFAS}, \code{FKF} and \code{sspir}.
 }
-\details{
+\section{Introduction}{
 Generalized Dynamic Linear Models are a powerful approach
 to time-series modelling, analysis and forecasting. This framework
-is closely related to the families of ARMA models, exponential
-smoothing, and structural time-series (also known as unobserved
-component models) which it includes as special cases.
+is closely related to the families of regression models, ARIMA models,
+exponential smoothing, and structural time-series (also known as
+unobserved component models, UCM).
 
 The origin of DLM time-series analysis has its roots in the
 world of engineering. In order to control dynamic physical systems,
 unknown quantities such as velocity and position (the state of the
 system) need to be estimated from noisy measurements such as readings
 from various sensors (the observations). The state of the
-system evolves from one state to another according to a defined
-transition equation (possibly including random perturbations and
-intervention effects), and the observations are derived from the
-state values by a defined observation equation (also possibly
-including random disturbances and intervention effects).
+system evolves from one state (e.g. position and speed at time t)
+to another (position and speed at time t+1) according to a known
+transition equation, possibly including random perturbations and
+intervention effects. The observations are derived from the
+state values by a an observation equation (e.g. observation at time t
+= position + noise), also possibly including random disturbances and
+intervention effects.
 
 The challenge is to obtain the best estimate of the unknown state
 considering the set of available observations at a given point in
-time. During the 1960s, the Kalman filtering and smoothing algorithm
+time. Due to the presence of noise disturbances, it is generally not
+possible to simply use the observations directly because they lead to
+estimators which are too erratic.
+During the 1960s, the Kalman filtering and smoothing algorithm
 was developed and popularized to efficiently and optimally solve this
 etimation problem.
 The technique is based on an iterative procedure in which state values
@@ -42,7 +47,8 @@ are successively predicted given the knowledge of the past
 observations, and then updated upon the reception of the next
 observation. Because of the predict-and-update nature of Kalman
 filtering, it can also be interpreted under a Bayesian perspective.
-
+}
+\section{Dynamic linear models}{
 The theory developed for the control of dynamic systems has a direct
 application to the general analysis of time-series. By having a good
 estimate of the current state and dynamics of the system, it is
@@ -59,38 +65,47 @@ exponential family of functions (which includes the Bernoulli,
 binomial and Poisson distributions, useful in particular for count
 data).
 
+There are two constitutive operations for dynamic linear models:
+filtering and smoothing.
+In a few words, filtering is the operation consisting in estimating
+the state values at time t, using only observations up to (and
+including) t-1.
+On the contrary, smoothing is the operation which aims at estimating
+the state values using the whole set of observations.
+}
+\details{
 The distinguishing aspect of this package is that it provides
 functions for naming and extracting components of DLMs (see below),
-and a unified interface compatible with other state-space packages for
-filtering and smoothing:
+and a unified interface compatible with other state-space R packages
+for filtering and smoothing:
 \itemize{
 \item package \code{KFAS}: implements exact diffuse initialization and
       supports filtering, smoothing and likelihood computation for the
-      exponential family state-space models (as of v0.6.0)
-\item package \code{FKF}: very fast and memory efficient but has no
-      smoothing algorithm (as of v0.1.1)
+      exponential family state-space models (as of v0.6.0), used by
+      default
 \item package \code{dlm}: good general purpose package with many
       helper functions available and some support for Bayesian
       analysis (as of v1.1-2)
+\item package \code{FKF}: very fast and memory efficient but has no
+      smoothing algorithm (as of v0.1.1)
+\item package \code{sspir}: provides (extended) Kalman filter and
+      Kalman smoother for models with Gaussian, Poisson and binomial
+      families, but it has no support for the multivariate case,
+      exact diffuse initialization or importance sampling, and missing
+      values in covariates (as of v0.2.8)
 }
-
 }
 \section{State-space form and notations}{
-The state space model is represented as follows:
-
-initial state:        \eqn{alpha(0) \sim N(a(0), P(0))}
-
-observation equation: \eqn{y(t)       = Z(t)alpha(t) + eta(t)}
-
-transition equation:  \eqn{alpha(t+1) = T(t)alpha(t) + R(t)eps(t)}
-
-observation disturbance: \eqn{eta(t) \sim N(0, H(t))}
-
-state disturbance:       \eqn{eps(t) \sim N(0, Q(t))}
-
-state mean and covariance matrix: \eqn{a(t) = E[alpha(t)]}
+The state-space model is represented as follows:
+\itemize{
+\item initial state:        \eqn{alpha(0) \sim N(a(0), P(0))}
+\item observation equation: \eqn{y(t)       = Z(t)alpha(t) + eta(t)}
+\item transition equation:  \eqn{alpha(t+1) = T(t)alpha(t) + R(t)eps(t)}
+\item observation disturbance: \eqn{eta(t) \sim N(0, H(t))}
+\item state disturbance:       \eqn{eps(t) \sim N(0, Q(t))}
+\item state mean and covariance matrix: \eqn{a(t) = E[alpha(t)]}
 and \eqn{P(t) = cov(alpha(t))}
-
+}
 With:
 \itemize{
 \item \eqn{n} = number of time-steps \eqn{(t=1..n)}
@@ -113,26 +128,22 @@ With:
 }
 \section{Components}{
 DLMs are constructed by combining several terms together. The model
-consisiting of \eqn{level+trend+seasonal+cycle} is a good example of
+consisiting of \eqn{level+trend+seasonal+cycle} is an example of
 how individual elements can be added together to form a more complete
 model. A typical analysis will consider the model as a whole, but also
 look into the values of indivdual terms, for example the variations in
 the \eqn{level}, and the evolution of the shape of the \eqn{seasonal}
-terms.
+terms. This is also known as seasonal adjustment.
 
 This package introduces a notion called the "component" to facilitate
 the analysis of the DLMs. Mathematically speaking, a component is a
-named subset of state variables.
-
-Components can be created when the model is built, which makes it
-easier to access and analyze their values afterwards.
+named subset of state variables. Components are automatically created
+when the model is built, and the package provides functions which
+makes it easier to access and analyze their values afterwards:
+expectation, variance and prediction/confidence bands.
 }
 \section{Notes}{
-Work is in progress to include package \code{sspir} as back-end and to
-provide support for generalized models.
-
-Ideas for the future include: using formulas to specify DLMs and
-faster C code whenever possible.
+Work is in progress to provide generalized DLM support. 
 }
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
@@ -152,20 +163,22 @@ Petris, Petrone, and Campagnoli, Dynamic Linear Models with R, Springer (2009).
 \keyword{ dlm }
 \keyword{ forecast }
 \keyword{ kalman }
-\keyword{ filter }
-\keyword{ smoother }
+\keyword{ filtering }
+\keyword{ smoothing }
 \seealso{
 Other R packages and functions of interest (in alphabetical order):
 \itemize{
-\item Package \code{dlm}
-\item Package \code{dse}
-\item Package \code{FKF}
-\item Package \code{forecast}
-\item HoltWinters from \{stats\}
-\item Package \code{KFAS}
-\item Package \code{MARSS}
-\item Package \code{sspir}
-\item StructTS from \{stats\}
+\item decompose() from \{stats\}: Decompose a time series into seasonal, trend and irregular components using moving averages. Deals with additive or multiplicative seasonal component.
+\item Package \code{dlm}: Maximum likelihood, Kalman filtering and smoothing, and Bayesian analysis of Normal linear State Space models, also known as Dynamic Linear Models.
+\item Package \code{dse}: Package dse provides tools for multivariate, linear, time-invariant, time series models. It includes ARMA and state-space representations, and methods for converting between them. It also includes simulation methods and several estimation functions. The package has functions for looking at model roots, stability, and forecasts at different horizons. The ARMA model representaion is general, so that VAR, VARX, ARIMA, ARMAX, ARIMAX can all be considered to be special cases. Kalman filter and smoother estimates can be obtained from the state space model, and state-space model reduction techniques are implemented. An introduction and User's Guide is available in a vignette.
+\item Package \code{FKF}: This is a fast and flexible implementation of the Kalman filter, which can deal with NAs. It is entirely written in C and relies fully on linear algebra subroutines contained in BLAS and LAPACK. Due to the speed of the filter, the fitting of high-dimensional linear state space models to large datasets becomes possible. This package also contains a plot function for the visualization of the state vector and graphical diagnostics of the residuals.
+\item Package \code{forecast}: Methods and tools for displaying and analysing univariate time series forecasts including exponential smoothing via state space models and automatic ARIMA modelling.
+\item HoltWinters() from \{stats\}: Computes Holt-Winters Filtering of a given time series. Unknown parameters are determined by minimizing the squared prediction error.
+\item Package \code{KFAS}: Package KFAS provides functions for Kalman filtering, state, disturbance and simulation smoothing, forecasting and simulation of state space models. All functions can use exact diffuse initialisation when distributions of some or all elements of initial state vector are unknown. Filtering, state smoothing and simulation functions use sequential processing algorithm, which is faster than standard approach, and it also allows singularity of prediction error variance matrix. KFAS also contains function for computing the likelihood of exponential family state space models and function for state smoothing of exponential family state space models.
+\item Package \code{MARSS}: The MARSS package fits constrained and unconstrained linear multivariate autoregressive state-space (MARSS) models to multivariate time series data.
+\item Package \code{sspir}: A glm-like formula language to define dynamic generalized linear models (state space models). Includes functions for Kalman filtering and smoothing. Estimation of variance matrices can be perfomred using the EM algorithm in case of Gaussian models. Read help(sspir) to get started.
+\item stl() from \{stats\}: Decompose a time series into seasonal, trend and irregular components using loess, acronym STL.
+\item StructTS() and tsSmooth() from \{stats\}: Fit a structural model for a time series by maximum likelihood. Performs fixed-interval smoothing on a univariate time series via a state-space model. Fixed-interval smoothing gives the best estimate of the state at each time point based on the whole observed series.
 }
 
 Other software of interest (in alphabetical order):
@@ -173,6 +186,10 @@ Other software of interest (in alphabetical order):
 \item SAS PROC UCM \code{http://www.sas.com/products/ets}
 \item SsfPack \code{http://www.ssfpack.com}
 \item STAMP \code{http://www.stamp-software.com}
+\item S+FinMetrics \code{http://www.insightful.com/products/finmetrics}
+\item TRAMO-SEATS \code{http://www.bde.es/servicio/software/econome.htm}
+\item X12-ARIMA \code{http://www.census.gov/srd/www/x12a/}
+\item X13-ARIMA-SEATS \code{http://www.census.gov/ts/papers/jsm09bcm.pdf}
 }
 }
 \examples{
@@ -182,10 +199,10 @@ require(dlmodeler)
 # package by reproducing famous examples of state-space time-series
 # analysis found in the litterature.
 
-##############################################
-# analysis from Durbin & Koopman book pp. 32 #
-# random walk                                #
-##############################################
+###############################################
+# analysis from Durbin & Koopman book page 32 #
+# random walk                                 #
+###############################################
 
 # load and show the data
 y <- matrix(Nile,nrow=1)
@@ -193,6 +210,7 @@ plot(y[1,],type='l')
 
 # y(t)   = a(t) + eta(t)
 # a(t+1) = a(t) + eps(t)
+# with the parametrization (phi) proposed in the book
 build.fun <- function(p) {
 	varH <- exp(p[1])
 	varQ <- exp(p[2])*varH
@@ -226,10 +244,10 @@ lines(f.ce$p32[1,],col='light blue',lty=2)
 lines(s.ce$p32[1,],col='dark blue')
 
 
-###############################################
-# analysis from Durbin & Koopman book pp. 163 #
-# random walk + stochastic seasonal           #
-###############################################
+################################################
+# analysis from Durbin & Koopman book page 163 #
+# random walk + stochastic seasonal            #
+################################################
 
 # load and show the data
 y <- matrix(log(Seatbelts[,'drivers']),nrow=1)
@@ -240,21 +258,16 @@ plot(y[1,],type='l')
 # s1(t+1) = -s2(t) - s3(t) - ... - s12(t) + eps_S(t)
 # s2(t+1) = s1(t)
 # s3(t+1) = s2(t), etc.
-build.fun <- function(p) {
-	sigmaH <- exp(p[1])
-	sigmaQL <- exp(p[2])*sigmaH
-	sigmaQS <- exp(p[3])*sigmaH
-	dlmodeler.build.structural(
+mod <- dlmodeler.build.structural(
 			pol.order=0,
-			pol.sigmaQ=sigmaQL,
+			pol.sigmaQ=NA,
 			dseas.order=12,
-			dseas.sigmaQ=sigmaQS,
-			sigmaH=sigmaH,
+			dseas.sigmaQ=NA,
+			sigmaH=NA,
 			name='p163')
-}
 
 # fit the model by maximum likelihood estimation
-fit <- dlmodeler.fit.MLE(y, build.fun, c(0,0,0), verbose=FALSE)
+fit <- dlmodeler.fit(y, mod, method="MLE")
 
 # compare the fitted parameters with those reported by the authors
 fit$model$Ht[1,1] # H  = 0.0034160
@@ -289,7 +302,7 @@ lines(s.ce$seasonal[1,],type='l',col='dark green')
 
 
 #########################################################
-# analysis from Durbin & Koopman book pp. 166           #
+# analysis from Durbin & Koopman book page 166          #
 # random walk + seasonal + seat belt law + petrol price #
 #########################################################
 
@@ -307,27 +320,22 @@ plot(law[1,],type='l')
 # s1(t+1) = -s2(t) - s3(t) - ... - s12(t)
 # s2(t+1) = s1(t)
 # s3(t+1) = s2(t), etc.
-build.fun <- function(p) {
-	sigmaH <- exp(p[1])
-	sigmaQ <- exp(p[2])*sigmaH
-	m1 <- dlmodeler.build.structural(
-			pol.order=0,
-			dseas.order=12,
-			sigmaH=sigmaH,
-			pol.sigmaQ=sigmaQ)
-	m2 <- dlmodeler.build.regression(
-			law,
-			sigmaH=0,
-			name='law')
-	m3 <- dlmodeler.build.regression(
-			petrolprice,
-			sigmaH=0,
-			name='petrolprice')
-	dlmodeler.add(dlmodeler.add(m1,m2),m3,name='p166')
-}
+m1 <- dlmodeler.build.structural(
+		pol.order=0,
+		dseas.order=12,
+		sigmaH=NA, pol.sigmaQ=NA)
+m2 <- dlmodeler.build.regression(
+		law,
+		sigmaQ=0,
+		name='law')
+m3 <- dlmodeler.build.regression(
+		petrolprice,
+		sigmaQ=0,
+		name='petrolprice')
+mod <- dlmodeler.add(dlmodeler.add(m1,m2),m3,name='p166')
 
 # fit the model by maximum likelihood estimation
-fit <- dlmodeler.fit.MLE(y, build.fun, c(0,0), verbose=FALSE)
+fit <- dlmodeler.fit(y, mod, method="MLE")
 
 # compute the filtered and smoothed values
 f <- dlmodeler.filter(y, fit$model, smooth=TRUE)
@@ -371,30 +379,20 @@ plot(y[1,],type='l')
 # random walk
 # y(t)   = a(t) + eta(t)
 # a(t+1) = a(t) + eps(t)
-build.fun <- function(p) {
-	if( length(p)==1 ) p <- c(0,p[1])
-	sigmaH <- exp(p[1])
-	sigmaQ <- exp(p[2])*sigmaH
-	dlmodeler.build.polynomial(0,sigmaH,sigmaQ,name='p32')
-}
+mod <- dlmodeler.build.polynomial(0,sigmaQ=NA,name='p32')
 
 # fit the model by maximum likelihood estimation and compute the
 # 1-step ahead MSE
-fit.mle <- dlmodeler.fit.MLE(y, build.fun, c(0,0))
-mean((fit.mle$filtered$f[1,1:100]-y[1,1:100])^2)
+fit.mle <- dlmodeler.fit(y, mod, method="MLE")
+mean((fit.mle$filtered$f[1,10:100]-y[1,10:100])^2)
 
 # fit the model by minimizing the 1-step ahead MSE
-fit.mse1 <- dlmodeler.fit.MSE(y, build.fun, ahead=1, c(0))
-mean((fit.mse1$filtered$f[1,1:100]-y[1,1:100])^2)
+fit.mse1 <- dlmodeler.fit(y, mod, method="MSE", ahead=1, start=10)
+mean((fit.mse1$filtered$f[1,10:100]-y[1,10:100])^2)
 
-# fit the model by minimizing the 3-step ahead MSE
-fit.mse3 <- dlmodeler.fit.MSE(y, build.fun, ahead=3, c(0))
-mean((fit.mse3$filtered$f[1,1:100]-y[1,1:100])^2)
-
-# fit the model by minimizing the std deviation of the 1-step
-# ahead predictions
-fit.sigma <- dlmodeler.fit.sigma(y, build.fun, c(0))
-mean((fit.sigma$filtered$f[1,1:100]-y[1,1:100])^2)
+# fit the model by minimizing the 4-step ahead MSE
+fit.mse4 <- dlmodeler.fit(y, mod, method="MSE", ahead=4, start=10)
+mean((fit.mse4$filtered$f[1,10:100]-y[1,10:100])^2)
 
 # compare the 1-step ahead forecasts for these models
 # as can be expected, the MLE and MSE1 models roughly
@@ -402,8 +400,7 @@ mean((fit.sigma$filtered$f[1,1:100]-y[1,1:100])^2)
 plot(y[1,],type='l')
 lines(fit.mle$filtered$f[1,],col='dark blue')
 lines(fit.mse1$filtered$f[1,],col='dark green')
-lines(fit.mse3$filtered$f[1,],col='dark red')
-lines(fit.sigma$filtered$f[1,],col='orange')
+lines(fit.mse4$filtered$f[1,],col='dark red')
 
 
 #################################################
@@ -415,21 +412,16 @@ y <- matrix(log(Seatbelts[,'drivers']),nrow=1)
 plot(y[1,],type='l')
 
 # model with level + seasonal
-build.fun <- function(p) {
-	sigmaH <- exp(p[1])
-	sigmaQL <- exp(p[2])*sigmaH
-	sigmaQS <- exp(p[3])*sigmaH
-	dlmodeler.build.structural(
+mod <- dlmodeler.build.structural(
 			pol.order=0,
-			pol.sigmaQ=sigmaQL,
+			pol.sigmaQ=NA,
 			dseas.order=12,
-			dseas.sigmaQ=sigmaQS,
-			sigmaH=sigmaH,
+			dseas.sigmaQ=NA,
+			sigmaH=NA,
 			name='p163')
-}
 
 # fit the model by maximum likelihood estimation, filter & smooth
-fit <- dlmodeler.fit.MLE(y, build.fun, c(0,0,0), verbose=FALSE)
+fit <- dlmodeler.fit(y, mod, method="MLE")
 fs <- dlmodeler.filter(y, fit$model, smooth=TRUE)
 
 # value we will be using to compute 90\% prediction intervals

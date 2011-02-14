@@ -68,19 +68,13 @@ When the value \code{interval} is requested, this function returns a list for ea
 	\code{k=-qnorm((1+prob)/2)}.
 }
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
 }
-\note{
-%%  ~~further notes~~
-}
 
 \seealso{
-\code{\link{dlmodeler}},
-\code{\link{dlmodeler.filter}},
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.filter}}, 
 \code{\link{dlmodeler.smooth}}
 }
 \examples{

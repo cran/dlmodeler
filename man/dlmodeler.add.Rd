@@ -29,20 +29,17 @@ Giovanni Petris, An R Package for Dynamic Linear Models. Journal of Statistical 
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
 }
-\note{
-%%  ~~further notes~~
-}
 
 \seealso{
-\code{\link{dlmodeler}}, \code{\link{dlmodeler.bind}}
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.bind}}
 }
 \examples{
 require(dlmodeler)
 
 # create the following model:
 # deterministic level + quarterly seasonal + disturbance
-sigma <- .1
-mod1 <- dlmodeler.build.polynomial(0,sigmaH=sigma)
+mod1 <- dlmodeler.build.polynomial(0,sigmaH=.1)
 mod2 <- dlmodeler.build.dseasonal(4,sigmaH=0)
 mod <- dlmodeler.add(mod1, mod2)
 }

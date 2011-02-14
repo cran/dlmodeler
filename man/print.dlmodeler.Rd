@@ -20,14 +20,8 @@ names of the components.
 \value{
 No value.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
-}
-\note{
-%%  ~~further notes~~
 }
 
 \seealso{

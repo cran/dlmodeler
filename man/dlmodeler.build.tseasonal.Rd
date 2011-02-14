@@ -8,7 +8,7 @@ Builds an univariate trigonometric seasonal DLM of the specified order.
 }
 \usage{
 dlmodeler.build.tseasonal(per, ord = NULL,
-                          sigmaH = 1, sigmaQ = 0,
+                          sigmaH = NA, sigmaQ = 0,
                           name = "tseasonal")
 }
 \arguments{
@@ -29,8 +29,8 @@ be an integer value.
 The initial value \code{P0inf} is parametered to use exact diffuse initialisation
 (if supported by the back-end). 
 
-Remember: the observation disturbance is generally greater than 0, and the state
-disturbance is 0 for classical deterministic models. By looking at the prototype
+Remember: all functions of this package assume by default a zero state
+disturbance (deterministic states). By looking at the prototype
 for this function, you can assume sigmaH refers to the observation and sigmaQ
 refers to the state. This rule of thumb is useful to remember how this function
 should be used.
@@ -50,12 +50,12 @@ State representations are not unique, so other forms could be used to achieve th
 }
 
 \seealso{
-\code{\link{dlmodeler}},
-\code{\link{dlmodeler.build}},
-\code{\link{dlmodeler.build.polynomial}},
-\code{\link{dlmodeler.build.dseasonal}},
-\code{\link{dlmodeler.build.structural}},
-\code{\link{dlmodeler.build.arima}},
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.build}}, 
+\code{\link{dlmodeler.build.polynomial}}, 
+\code{\link{dlmodeler.build.dseasonal}}, 
+\code{\link{dlmodeler.build.structural}}, 
+\code{\link{dlmodeler.build.arima}}, 
 \code{\link{dlmodeler.build.regression}}
 }
 \examples{

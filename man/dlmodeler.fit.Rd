@@ -3,6 +3,7 @@
 \alias{dlmodeler.fit.MLE}
 \alias{dlmodeler.fit.MSE}
 \alias{dlmodeler.fit.MAD}
+\alias{dlmodeler.fit.MAPE}
 \alias{dlmodeler.fit.sigma}
 \title{
 Fitting function for a model (MLE, MSE, MAD, sigma)
@@ -13,35 +14,53 @@ minimum average deviation (MAD) or minimum standard deviation
 (sigma) methods.
 }
 \usage{
+dlmodeler.fit(yt, model=NULL, 
+              method=c("MLE","MSE","MAD","MAPE","sigma"), ...)
+
 dlmodeler.fit.MLE(yt, build.fun, par,
                   backend = c('KFAS','FKF','dlm'), method = "L-BFGS-B",
-                  verbose = FALSE, filter = TRUE, smooth = FALSE,
-                  raw.result = FALSE, ...)
+                  verbose = FALSE, silent = FALSE, filter = TRUE,
+                  smooth = FALSE, raw.result = FALSE, ...)
 
 dlmodeler.fit.MSE(yt, build.fun, par,
-                  ahead, iters = NCOL(yt)-ahead, step = 1, start = 1,
+                  ahead, iters = NCOL(yt)-ahead-start-1, 
+                  step = 1, start = 1,
                   backend = c('KFAS','FKF','dlm'), method = "L-BFGS-B",
-                  verbose = FALSE, filter = TRUE, smooth = FALSE,
+                  verbose = FALSE, silent = FALSE,
+                  filter = TRUE, smooth = FALSE,
                   raw.result=FALSE, ...)
 
 dlmodeler.fit.MAD(yt, build.fun, par,
-                  ahead, iters = NCOL(yt)-ahead, step = 1, start = 1,
+                  ahead, iters = NCOL(yt)-ahead-start-1, 
+                  step = 1, start = 1,
                   backend = c('KFAS','FKF','dlm'), method = "L-BFGS-B",
-                  verbose = FALSE, filter = TRUE, smooth = FALSE,
+                  verbose = FALSE, silent = FALSE,
+                  filter = TRUE, smooth = FALSE,
+                  raw.result=FALSE, ...)
+
+dlmodeler.fit.MAPE(yt, build.fun, par,
+                  ahead, iters = NCOL(yt)-ahead-start-1, 
+                  step = 1, start = 1,
+                  backend = c('KFAS','FKF','dlm'), method = "L-BFGS-B",
+                  verbose = FALSE, silent = FALSE,
+                  filter = TRUE, smooth = FALSE,
                   raw.result=FALSE, ...)
 
 dlmodeler.fit.sigma(yt, build.fun, par,
                   backend = c('KFAS','FKF','dlm'), method = "L-BFGS-B",
-                  verbose = FALSE, filter = TRUE, smooth = FALSE,
+                  verbose = FALSE, silent = FALSE,
+                  filter = TRUE, smooth = FALSE,
                   raw.result=FALSE, ...)
 }
 \arguments{
   \item{yt}{matrix of observed values (one column per time step).}
+  \item{model}{object of class \code{dlmodeler} with \code{NA} values to be fitted.}
   \item{build.fun}{function taking parameter vector \code{p} as first argument and returning a DLM.}
   \item{par}{initial value of the parameter vector \code{p}.}
   \item{backend}{an optional argument which specifies the back-end to use for the computations.}
   \item{method}{optimization method passed to function \code{optim}.}
   \item{verbose}{if \code{TRUE}, then write one line per iteration giving the parameter vector \code{p} and the value of the objective function.}
+  \item{silent}{if \code{TRUE}, then do not write anything.}
   \item{filter}{if \code{TRUE}, then return the filtered optimal model.}
   \item{smooth}{if \code{TRUE}, the return the smoothed optimal model.}
   \item{raw.result}{if \code{TRUE}, the raw results from the back-end will be stored in \code{raw.result}.}
@@ -68,6 +87,12 @@ for the given data.
 This is called Minimum Average Deviation fitting. The absolute error is averaged over
 \code{ahead} prediction steps.
 
+\code{dlmodeler.fit.MAPE} is designed to find parameter values which minimize the
+average \eqn{n}-step ahead prediction absolute percentage error \eqn{|predicted-actual|}
+for the given data.
+This is called Minimum Average Percentage Error fitting. The absolute percentage error
+is averaged over \code{ahead} prediction steps.
+
 \code{dlmodeler.fit.sigma} is designed to find parameter values which minimize the
 one-step ahead prediction variance for the given data.
 
@@ -82,26 +107,24 @@ An object of class \code{dlmodeler.fit} with the following values:
 \item{par0}{initial value of \code{par}}
 \item{filtered}{optionally, the filtered model: \code{dlmodeler.filter(yt,build.fun(par))}}
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
 }
 \note{
-%%  ~~further notes~~
+\code{dlmodeler.fit} automatically fits models which contain \code{NA}
+values.
 }
 
 \seealso{
-\code{\link{dlmodeler}},
-\code{\link{dlmodeler.filter}},
-\code{\link{dlmodeler.smooth}},
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.filter}}, 
+\code{\link{dlmodeler.smooth}}, 
 \code{\link{dlmodeler.forecast}}
 }
 \examples{
 require(dlmodeler)
 
-# analysis from Durbin & Koopman book pp. 32
+# analysis from Durbin & Koopman book page 32
 
 # load and show the data
 y <- matrix(Nile,nrow=1)
@@ -109,14 +132,10 @@ plot(y[1,],type='l')
 
 # y(t)   = a(t) + eta(t)
 # a(t+1) = a(t) + eps(t)
-build.fun <- function(p) {
-	varH <- exp(p[1])
-	varQ <- exp(p[2])*varH
-	dlmodeler.build.polynomial(0,sqrt(varH),sqrt(varQ),name='p32')
-}
+mod <- dlmodeler.build.polynomial(0,sigmaH=NA,sigmaQ=NA,name='p32')
 
 # fit the model by maximum likelihood estimation
-fit <- dlmodeler.fit.MLE(y, build.fun, c(0,0), verbose=FALSE)
+fit <- dlmodeler.fit(y, mod, method="MLE")
 
 # compare the fitted parameters with those reported by the authors
 fit$par[2]        # psi = -2.33

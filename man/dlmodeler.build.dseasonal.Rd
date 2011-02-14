@@ -7,7 +7,7 @@ Build a "dummy seasonal" model
 Builds an univariate "dummy seasonal" DLM of the specified order.
 }
 \usage{
-dlmodeler.build.dseasonal(ord, sigmaH = 1, sigmaQ = 0,
+dlmodeler.build.dseasonal(ord, sigmaH = NA, sigmaQ = 0,
                           name = "dseasonal")
 }
 \arguments{
@@ -26,8 +26,8 @@ This only requires \code{ord}-1 state variables.
 The initial value \code{P0inf} is parametered to use exact diffuse initialisation
 (if supported by the back-end).
 
-Remember: the observation disturbance is generally greater than 0, and the state
-disturbance is 0 for classical deterministic models. By looking at the prototype
+Remember: all functions of this package assume by default a zero state
+disturbance (deterministic states). By looking at the prototype
 for this function, you can assume sigmaH refers to the observation and sigmaQ
 refers to the state. This rule of thumb is useful to remember how this function
 should be used.
@@ -37,7 +37,7 @@ An object of class \code{dlmodeler} representing the dummy seasonal model.
 }
 \references{
 Durbin, and Koopman, Time Series Analysis by State Space Methods, Oxford University Press (2001),
-pp. 38-45.
+pages 38-45.
 }
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
@@ -47,12 +47,12 @@ State representations are not unique, so other forms could be used to achieve th
 }
 
 \seealso{
-\code{\link{dlmodeler}},
-\code{\link{dlmodeler.build}},
-\code{\link{dlmodeler.build.polynomial}},
-\code{\link{dlmodeler.build.tseasonal}},
-\code{\link{dlmodeler.build.structural}},
-\code{\link{dlmodeler.build.arima}},
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.build}}, 
+\code{\link{dlmodeler.build.polynomial}}, 
+\code{\link{dlmodeler.build.tseasonal}}, 
+\code{\link{dlmodeler.build.structural}}, 
+\code{\link{dlmodeler.build.arima}}, 
 \code{\link{dlmodeler.build.regression}}
 }
 \examples{

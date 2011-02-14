@@ -40,24 +40,18 @@ This function is called by the helper functions referenced below.
 \value{
 An object of class \code{dlmodeler} representing the model.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
 }
-\note{
-%%  ~~further notes~~
-}
 
 \seealso{
-\code{\link{dlmodeler}},
-\code{\link{dlmodeler.check}},
-\code{\link{dlmodeler.build.polynomial}},
-\code{\link{dlmodeler.build.dseasonal}},
-\code{\link{dlmodeler.build.tseasonal}},
-\code{\link{dlmodeler.build.structural}},
-\code{\link{dlmodeler.build.arima}},
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.check}}, 
+\code{\link{dlmodeler.build.polynomial}}, 
+\code{\link{dlmodeler.build.dseasonal}}, 
+\code{\link{dlmodeler.build.tseasonal}}, 
+\code{\link{dlmodeler.build.structural}}, 
+\code{\link{dlmodeler.build.arima}}, 
 \code{\link{dlmodeler.build.regression}}
 }
 \examples{
@@ -77,7 +71,7 @@ mod <- dlmodeler.build(
 # print the model
 mod
 # check if it is valid
-dlmodeler.check(mod)[1]==1
+dlmodeler.check(mod)$status
 
 # an empty DLM with 4 state variables (3 of which are stocastic)
 # and bi-variate observations
@@ -85,6 +79,6 @@ mod <- dlmodeler.build(dimensions=c(4,3,2))
 # print the model
 mod
 # check if it is valid
-dlmodeler.check(mod)[1]==1
+dlmodeler.check(mod)$status
 }
 \keyword{ dlm }

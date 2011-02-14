@@ -25,18 +25,13 @@ concatenation of the observation vectors of \code{mod1} and
 An object of class \code{dlmodeler} representing the sum of
 \code{mod1} and \code{mod2}.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
 }
-\note{
-%%  ~~further notes~~
-}
 
 \seealso{
-\code{\link{dlmodeler}}, \code{\link{dlmodeler.add}}
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.add}}
 }
 \examples{
 ## Example TODO

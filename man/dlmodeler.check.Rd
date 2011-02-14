@@ -20,29 +20,24 @@ adopted in this package.
 }
 \value{
 An array with the following information:
-\item{1}{an integer indicating whether the model is valid (1) or not (0)}
-\item{2}{dimension of state vector \eqn{m}}
-\item{2}{dimension of state disturbance covariance matrix \eqn{r}}
-\item{3}{dimension of observation vector \eqn{d}}
-\item{4}{an integer indicating if the model has time-varying terms (1) or not (0)}
-\item{5}{the number of time steps in Tt, or NA if the matrix is constant}
-\item{6}{the number of time steps in Rt, or NA if the matrix is constant}
-\item{7}{the number of time steps in Qt, or NA if the matrix is constant}
-\item{8}{the number of time steps in Zt, or NA if the matrix is constant}
-\item{8}{the number of time steps in Ht, or NA if the matrix is constant}
-}
-\references{
-%% ~put references to the literature/web site here ~
+\item{status}{a boolean indicating whether the model is valid or not}
+\item{m}{dimension of state vector \eqn{m}}
+\item{r}{dimension of state disturbance covariance matrix \eqn{r}}
+\item{d}{dimension of observation vector \eqn{d}}
+\item{timevar}{a boolean indicating if the model has time-varying terms or not}
+\item{timevar.Tt}{the number of time steps in Tt, or NA if the matrix is constant}
+\item{timevar.Rt}{the number of time steps in Rt, or NA if the matrix is constant}
+\item{timevar.Qt}{the number of time steps in Qt, or NA if the matrix is constant}
+\item{timevar.Zt}{the number of time steps in Zt, or NA if the matrix is constant}
+\item{timevar.Ht}{the number of time steps in Ht, or NA if the matrix is constant}
 }
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
 }
-\note{
-%%  ~~further notes~~
-}
 
 \seealso{
-\code{\link{dlmodeler}}, \code{\link{dlmodeler.build}}
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.build}}
 }
 \examples{
 require(dlmodeler)
@@ -61,7 +56,7 @@ mod <- dlmodeler.build(
 # print the model
 mod
 # check if it is valid
-dlmodeler.check(mod)[1]==1
+dlmodeler.check(mod)$status
 
 # an empty DLM with 4 state variables (3 of which are stocastic)
 # and bi-variate observations
@@ -69,6 +64,6 @@ mod <- dlmodeler.build(dimensions=c(4,3,2))
 # print the model
 mod
 # check if it is valid
-dlmodeler.check(mod)[1]==1
+dlmodeler.check(mod)$status
 }
 \keyword{ dlm }

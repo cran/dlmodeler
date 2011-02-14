@@ -24,7 +24,7 @@ dlmodeler.smooth(filt, raw.result = FALSE)
   \item{raw.result}{if TRUE, the raw results from the back-end will be stored in \code{raw.result}.}
   \item{logLik}{an optional argument which specifies if the back-end shoud compute the log-likelihood.}
   \item{filter}{an optional argument which specifies if the back-end shoud also run the filtering algorithm.}
-  \item{filt}{filtered \code{dlmodeler}, as a result from a call to \code{dlmodeler.filter()}.}
+  \item{filt}{filtered \code{dlmodeler.filtered}, as a result from a call to \code{dlmodeler.filter()}.}
 }
 \details{
 This function will automatically load the adequate back-end package.
@@ -47,9 +47,6 @@ Or an object of class \code{dlmodeler.smoothed} which contains the following ele
 \item{backend}{a character string indicating which back-end was used for the computation}
 \item{raw.result}{the raw result from the back-end, or NA if it wasn't requested}
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
 }
@@ -64,7 +61,7 @@ Package \code{FKF} does not implement a smoothing algorithm (as of v0.1.1).
 }
 
 \seealso{
-\code{\link{dlmodeler}},
+\code{\link{dlmodeler}}, 
 \code{\link{dlmodeler.forecast}}
 }
 \examples{

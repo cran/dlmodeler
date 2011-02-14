@@ -11,7 +11,8 @@ dlmodeler.forecast(yt, model,
                    ahead = 1,
                    iters = 1, step = 1, start = 1,
                    prob = .90,
-                   backend = c('KFAS','FKF','dlm'))
+                   backend = c('KFAS','FKF','dlm'),
+                   debug = FALSE)
 }
 \arguments{
   \item{yt}{matrix of observed values (one column per time-step).}
@@ -22,6 +23,7 @@ dlmodeler.forecast(yt, model,
   \item{start}{in case of MSE fitting, the index of the first prediction.}
   \item{prob}{probability to use for the computation of prediction intervals.}
   \item{backend}{an optional argument which specifies the back-end to use for the computations.}
+  \item{debug}{use slow but more robust code.}
 }
 \details{
 This function simulates forecasts for the
@@ -39,9 +41,6 @@ A \code{data.frame} with the following variables:
 \item{upper}{the upper bound for \code{yhat} computed with probability \code{prob}}
 \item{y}{the observed serie for the specified \code{yt[index]}}
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Cyrille Szymanski <cnszym@gmail.com>
 }
@@ -53,9 +52,9 @@ future versions of this package.
 }
 
 \seealso{
-\code{\link{dlmodeler}},
-\code{\link{dlmodeler.filter}},
-\code{\link{dlmodeler.smooth}},
+\code{\link{dlmodeler}}, 
+\code{\link{dlmodeler.filter}}, 
+\code{\link{dlmodeler.smooth}}, 
 \code{\link{dlmodeler.forecast}}
 }
 \examples{

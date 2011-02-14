@@ -1,28 +1,49 @@
 
-Revision 1.0-0 (2010-12-30)
- * First public release of the package
- * Illustrated the package with example taken from Durbin & Koopman book
- * Added support for ARIMA models (currently only ARMA has been implemented)
+Revision 1.1-0 (2011-02-14): Valentine's edition
+* Changed tseasonal: state disturbance is now a 1x1 matrix
+* Improved dlmodeler print function with number of unknown params
+* Greatly improved speed of the forecast function (typically > 10x)
+* Added support for using NA in build functions. NA indicates unknown
+  parameters of the model, they will be automatically estimated by
+  the dlmodeler.fit functions
+* Added MAPE fitting function
 
-Revision 0.3-0 (2010-12-28)
- * Fixed functions to check their arguments
- * Added AIC and BIC computation for fitted models
- * Added forecast simulation function (current implementation is slow but will be improved)
- * Added MSE and sigma fitting functions (in addition to MLE)
- * Added support for prediction intervals
+Revision 1.0-0 (2010-12-31): Sylvester's edition
+* First public release of the package to CRAN
+* Illustrated the usage of package function with examples taken from
+  Durbin & Koopman book
+* Added support for ARIMA models (currently only ARMA has been
+  implemented)
 
-Revision 0.2-0 (2010-12-27)
- * Fixed handling of the selection matrix Rt
- * Fixed a bug in timevar.fun
- * Added support for exact diffuse initialization (with KFAS back-end)
- * Added MLE fitting function (using optim(), w/ BFGS optimization)
- * Renamed "simulate" to "forecast" to avoid confusion with simulation
-   methods for exponential family models
+Revision 0.2-0 (2010-12-28)
+* Fixed handling of the selection matrix Rt
+* Fixed bugs in timevar.fun
+* Improved functions to check their arguments
+* Improved the forecast simulation function to support time-varying
+  models (current implementation is slow, but speed will be improved)
+* Added AIC and BIC computation for fitted models
+* Added MSE, MAD and sigma fitting functions (in addition to MLE)
+* Added support for variance and prediction intervals extraction
+* Added support for exact diffuse initialization (with KFAS back-end)
+* Added MLE fitting function (using optim(), w/ BFGS optimization)
+* Renamed "simulate" to "forecast" to avoid confusion with simulation
+  methods for exponential family models
 
 Revision 0.1-0 (2010-12-20)
- * Init package
- * Added helper functions for polynomial, dseasonal, tseasonal
- * Added regression and general support for time-varying models
- * Added filtering and smoothing with KFAS, FKF and dlm back-ends
- * Added notion of components (currently only the expectation is supported)
- * Added preliminary print function
+* Init R package & man pages
+* Added helper functions for polynomial, dseasonal, tseasonal
+* Added support for regression and time-varying models
+* Added filtering and smoothing with KFAS and FKF back-ends
+* Added notion of components (in this version, only the expectation
+  is supported, future versions will support extraction of the
+  variance)
+* Added preliminary dlmodeler print function
+
+Revision 0.0-0 (2010-06-05)
+* Added generic DLM representation (in this version, time-varying
+  models are not yet supported and will be implemented in the future)
+* Added filtering and smoothing with package dlm back-end (other
+  back-ends will be added in the future)
+* Added functions to build structural time-series models using
+  package dlm's helper functions
+* Added forecast simulation function
