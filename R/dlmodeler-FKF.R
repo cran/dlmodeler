@@ -37,3 +37,10 @@ dlmodeler.filter.FKF <-
 }
 
 
+
+dlmodeler.smooth.FKF <-
+		function(filt, raw.result=FALSE)
+{
+	stop("smoothing is not supported for backend: FKF");
+}
+

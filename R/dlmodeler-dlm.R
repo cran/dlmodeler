@@ -79,7 +79,7 @@ dlmodeler.smooth.dlm <-
 {
 	if(!require('dlm')) stop("required package could not be found: dlm")
 	
-	res <- dlmSmooth.dlmFiltered(filt$raw.result)
+	res <- dlm::dlmSmooth.dlmFiltered(filt$raw.result)
 	
 	if( raw.result ) raw.res <- res else raw.res <- NA
 	res.Pt <- dlm::dlmSvd2var(res$U.S,res$D.S)

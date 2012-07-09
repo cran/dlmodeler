@@ -286,7 +286,7 @@ function(filt, raw.result=FALSE)
 	if( class(filt)!='dlmodeler.filtered' ) stop("argument should be of class 'dlmodeler.filtered'")
 	if( is.null(filt$raw.result) ) stop("Raw results are not available; use raw.result=TRUE when calling dlmodeler.filter()")
 	if( filt$backend=='KFAS') { s <- dlmodeler.smooth.KFAS(filt)
-	} else if( filt$backend=='FKF') { stop("FKF does not support smoothing (as of v0.1.1)")
+	} else if( filt$backend=='FKF') { s <- dlmodeler.smooth.FKF(filt)
 	} else if( filt$backend=='dlm') { s <- dlmodeler.smooth.dlm(filt)
 	} else stop("Unknown backend: ",filt$backend)
 	class(s) <- 'dlmodeler.smoothed'

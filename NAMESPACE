@@ -1,0 +1,32 @@
+
+export(dlmodeler.add)
+export(dlmodeler.bind)
+export(dlmodeler.check)
+
+export(dlmodeler.build.arima)
+export(dlmodeler.build.dseasonal)
+export(dlmodeler.build.polynomial)
+export(dlmodeler.build)
+export(dlmodeler.build.regression)
+export(dlmodeler.build.structural)
+export(dlmodeler.build.tseasonal)
+
+export(dlmodeler.filter)
+export(dlmodeler.smooth)
+
+export(dlmodeler.forecast)
+export(dlmodeler.extract)
+
+export(dlmodeler.fit)
+export(dlmodeler.fit.MLE)
+export(dlmodeler.fit.MSE)
+export(dlmodeler.fit.MAD)
+export(dlmodeler.fit.MAPE)
+export(dlmodeler.fit.sigma)
+
+export(dlmodeler.yeardays)
+
+S3method(print,		dlmodeler)
+S3method(logLik,	dlmodeler.filtered)
+S3method(logLik,	dlmodeler.fit)
+S3method(AIC,		dlmodeler.fit)

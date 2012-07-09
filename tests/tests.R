@@ -52,20 +52,20 @@ is.na(dlmodeler.check(mod)$timevar.Ht)
 v1 <- matrix(1:9,nrow=3,ncol=3)
 v2 <- array(1:18,dim=c(3,3,2))
 
-m1 <- dlmodeler.timevar.fun(v1,v1,function(x,y) x+y)
+m1 <- dlmodeler:::dlmodeler.timevar.fun(v1,v1,function(x,y) x+y)
 sum(abs(m1-v1-v1))==0
-m21 <- dlmodeler.timevar.fun(v2,v1,function(x,y) x+y)
+m21 <- dlmodeler:::dlmodeler.timevar.fun(v2,v1,function(x,y) x+y)
 sum(abs(m21[,,1]-v1-v1))==0
 sum(abs(m21[,,2]-v1-v1-9))==0
-m22 <- dlmodeler.timevar.fun(v1,v2,function(x,y) x+y)
+m22 <- dlmodeler:::dlmodeler.timevar.fun(v1,v2,function(x,y) x+y)
 sum(abs(m22[,,1]-m21[,,1]))==0
 sum(abs(m22[,,2]-m21[,,2]))==0
-m3 <- dlmodeler.timevar.fun(v2,v1,function(x,y) x+y)
+m3 <- dlmodeler:::dlmodeler.timevar.fun(v2,v1,function(x,y) x+y)
 sum(abs(m3[,,1]-v1-v1))==0
 sum(abs(m3[,,2]-v1-matrix(10:18,nrow=3,ncol=3)))==0
 
 mt <- matrix(c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,0,0,0,9,9,9,0,0,0,9,9,9),nrow=6,ncol=6)
-md <- dlmodeler.timevar.fun(v1,v2,dlmodeler.bdiag)
+md <- dlmodeler:::dlmodeler.timevar.fun(v1,v2,dlmodeler:::dlmodeler.bdiag)
 sum(abs(md[,,2]-md[,,1]-mt))==0
 
 
@@ -237,12 +237,12 @@ abs(fit$model$Qt-1469.1)/1469.1 < .05
 
 # test build.unknowns
 test.model <- build.fun(c(NA,NA))
-test.model <-dlmodeler.build.unknowns(test.model)
+test.model <- dlmodeler:::dlmodeler.build.unknowns(test.model)
 test.model
 length(test.model$unknowns)==2
 
 # test build.function
-bfun <- dlmodeler.build.function(test.model)
+bfun <- dlmodeler:::dlmodeler.build.function(test.model)
 my.model <- bfun(fit$par)
 my.model
 length(my.model$unknowns)==0

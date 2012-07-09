@@ -1,4 +1,9 @@
 
+Revision 1.2-0 (2012-07-09): Hermine's edition
+* Upgraded to KFAS 0.9.9
+* Upgraded to FKF 0.1.2
+* Added NAMESPACE
+
 Revision 1.1-0 (2011-02-14): Valentine's edition
 * Changed tseasonal: state disturbance is now a 1x1 matrix
 * Improved dlmodeler print function with number of unknown params
@@ -15,7 +20,7 @@ Revision 1.0-0 (2010-12-31): Sylvester's edition
 * Added support for ARIMA models (currently only ARMA has been
   implemented)
 
-Revision 0.2-0 (2010-12-28)
+Revision 0.2-0 (2010-12-28):
 * Fixed handling of the selection matrix Rt
 * Fixed bugs in timevar.fun
 * Improved functions to check their arguments
@@ -29,7 +34,7 @@ Revision 0.2-0 (2010-12-28)
 * Renamed "simulate" to "forecast" to avoid confusion with simulation
   methods for exponential family models
 
-Revision 0.1-0 (2010-12-20)
+Revision 0.1-0 (2010-12-20):
 * Init R package & man pages
 * Added helper functions for polynomial, dseasonal, tseasonal
 * Added support for regression and time-varying models
@@ -39,7 +44,7 @@ Revision 0.1-0 (2010-12-20)
   variance)
 * Added preliminary dlmodeler print function
 
-Revision 0.0-0 (2010-06-05)
+Revision 0.0-0 (2010-06-05):
 * Added generic DLM representation (in this version, time-varying
   models are not yet supported and will be implemented in the future)
 * Added filtering and smoothing with package dlm back-end (other

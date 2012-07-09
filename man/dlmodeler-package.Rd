@@ -81,18 +81,19 @@ for filtering and smoothing:
 \itemize{
 \item package \code{KFAS}: implements exact diffuse initialization and
       supports filtering, smoothing and likelihood computation for the
-      exponential family state-space models (as of v0.6.0), used by
+      exponential family state-space models (as of v0.9.9), used by
       default
 \item package \code{dlm}: good general purpose package with many
       helper functions available and some support for Bayesian
       analysis (as of v1.1-2)
 \item package \code{FKF}: very fast and memory efficient but has no
-      smoothing algorithm (as of v0.1.1)
+      smoothing algorithm (as of v0.1.2)
 \item package \code{sspir}: provides (extended) Kalman filter and
-      Kalman smoother for models with Gaussian, Poisson and binomial
-      families, but it has no support for the multivariate case,
-      exact diffuse initialization or importance sampling, and missing
-      values in covariates (as of v0.2.8)
+      Kalman smoother for models with support for the exponential
+      family, but it has no support for the multivariate case,
+      exact diffuse initialization or importance sampling,
+      and does not support missing values in covariates
+      (as of v0.2.8)
 }
 }
 \section{State-space form and notations}{
