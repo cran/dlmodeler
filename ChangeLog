@@ -1,4 +1,7 @@
 
+Revision 1.2-1 (2012-07-11): Hermine's edition patch 1
+* Fixed to depend on R>=2.15.0
+
 Revision 1.2-0 (2012-07-09): Hermine's edition
 * Upgraded to KFAS 0.9.9
 * Upgraded to FKF 0.1.2

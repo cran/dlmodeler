@@ -1,7 +1,7 @@
 Package: dlmodeler
 Title: Generalized Dynamic Linear Modeler
-Version: 1.2-0
-Date: 2012-07-09
+Version: 1.2-1
+Date: 2012-07-11
 Author: Cyrille Szymanski <cnszym@gmail.com>
 Maintainer: Cyrille Szymanski <cnszym@gmail.com>
 Description: dlmodeler is a set of user-friendly functions to simplify
@@ -14,7 +14,7 @@ Description: dlmodeler is a set of user-friendly functions to simplify
         dlm, FKF and KFAS.
 License: GPL (>= 2) | BSD
 Suggests: KFAS (>= 0.9.9), FKF (>= 0.1.2), dlm (>= 1.1-2)
-Depends: R (>= 2.8)
-Packaged: 2012-07-09 22:59:22 UTC; cns
+Depends: R (>= 2.15.0)
+Packaged: 2012-07-11 19:55:07 UTC; cns
 Repository: CRAN
-Date/Publication: 2012-07-10 05:54:26
+Date/Publication: 2012-07-12 07:56:06
