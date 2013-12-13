@@ -65,6 +65,7 @@ Package \code{FKF} does not implement a smoothing algorithm (as of v0.1.1).
 \code{\link{dlmodeler.forecast}}
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # generate some data
@@ -123,6 +124,7 @@ s.obs.mean <- dlmodeler.extract(s,m,type="observation",
                                 value="mean")
 lines(s.obs.mean$level[1,]+s.obs.mean$year[1,],type='l',
 		ylim=c(pi-2,pi+2),col='dark green')
+}
 }
 \keyword{ dlm }
 \keyword{ kalman }

@@ -78,6 +78,7 @@ Cyrille Szymanski <cnszym@gmail.com>
 \code{\link{dlmodeler.smooth}}
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # generate some data
@@ -136,6 +137,7 @@ s.obs.mean <- dlmodeler.extract(s,m,type="observation",
                                 value="mean")
 lines(s.obs.mean$level[1,]+s.obs.mean$year[1,],type='l',
 		ylim=c(pi-2,pi+2),col='dark green')
+}
 }
 \keyword{ dlm }
 \keyword{ components }

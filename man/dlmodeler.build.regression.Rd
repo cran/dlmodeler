@@ -12,8 +12,8 @@ dlmodeler.build.regression(covariates, sigmaH = NA, sigmaQ = 0,
 }
 \arguments{
   \item{covariates}{covariate matrix (one row per covariate).}
-  \item{sigmaH}{std dev of the observation disturbance.}
-  \item{sigmaQ}{std dev of the state disturbance.}
+  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{sigmaQ}{std dev of the state disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
   \item{intercept}{should an intercept be added to the model?}
   \item{name}{an optional name to be given to the resulting DLM.}
 }
@@ -24,12 +24,6 @@ The regression term is of the form
 
 The initial value \code{P0inf} is parametered to use exact diffuse initialisation
 (if supported by the back-end).
-
-Remember: all functions of this package assume by default a zero state
-disturbance (deterministic states). By looking at the prototype
-for this function, you can assume sigmaH refers to the observation and sigmaQ
-refers to the state. This rule of thumb is useful to remember how this function
-should be used.
 }
 \value{
 An object of class \code{dlmodeler} representing the regression model.
@@ -55,6 +49,7 @@ State representations are not unique, so other forms could be used to achieve th
 \code{\link{dlmodeler.build.arima}}
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # generate some data
@@ -113,6 +108,7 @@ s.obs.mean <- dlmodeler.extract(s,m,type="observation",
                                 value="mean")
 lines(s.obs.mean$level[1,]+s.obs.mean$year[1,],type='l',
 		ylim=c(pi-2,pi+2),col='dark green')
+}
 }
 \keyword{ dlm }
 \keyword{ regression }

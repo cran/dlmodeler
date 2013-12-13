@@ -1,13 +1,34 @@
+Revision 1.3-2, 1.3-3 (2013-12-13):
+* License: BSD 2-clause License + file LICENSE
 
-Revision 1.2-1 (2012-07-11): Hermine's edition patch 1
+Revision 1.3-1 (2013-12-12):
+* License: BSD 2-clause License
+* Shorter examples
+
+Revision 1.3-0 (2013-12-08):
+* Improved documentation (sigmaH, sigmaQ, dlmodeler.build.tseasonal,
+  dlmodeler.build.structural)
+* Changed name of trigonometric component of dlmodeler.build.structural()
+  to "trigonometric" instead of incorrect name "cycle"
+* Upgraded to KFAS 1.0.2
+
+Revision 1.2-2 (2013-10-16):
+* Upgraded to KFAS 1.0.0
+* Upgraded to dlm 1.1-3
+* Greatly improved speed of dlmodeler.filter(..., backend='KFAS') and
+  dlmodeler.fit(..., backend='KFAS'), typically > 2x
+* Changed dlmodeler.build.polynomial component naming to: level, trend, polynomial
+* Fixed bug when calling dlmodeler.filter(..., logLik=T, filter=F, backend='dlm')
+
+Revision 1.2-1 (2012-07-11):
 * Fixed to depend on R>=2.15.0
 
-Revision 1.2-0 (2012-07-09): Hermine's edition
+Revision 1.2-0 (2012-07-09):
 * Upgraded to KFAS 0.9.9
 * Upgraded to FKF 0.1.2
 * Added NAMESPACE
 
-Revision 1.1-0 (2011-02-14): Valentine's edition
+Revision 1.1-0 (2011-02-14):
 * Changed tseasonal: state disturbance is now a 1x1 matrix
 * Improved dlmodeler print function with number of unknown params
 * Greatly improved speed of the forecast function (typically > 10x)
@@ -16,7 +37,7 @@ Revision 1.1-0 (2011-02-14): Valentine's edition
   the dlmodeler.fit functions
 * Added MAPE fitting function
 
-Revision 1.0-0 (2010-12-31): Sylvester's edition
+Revision 1.0-0 (2010-12-31):
 * First public release of the package to CRAN
 * Illustrated the usage of package function with examples taken from
   Durbin & Koopman book

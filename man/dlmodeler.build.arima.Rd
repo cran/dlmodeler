@@ -12,11 +12,11 @@ dlmodeler.build.arima(ar=c(), ma=c(), d=0,
                       name = "arima")
 }
 \arguments{
-  \item{ar}{vector of autoregressive coefficients.}
-  \item{ma}{vector of moving average coefficients.}
+  \item{ar}{vector of autoregressive coefficients c(ar1, ar2, ar3...).}
+  \item{ma}{vector of moving average coefficients c(ma1, ma2, ma3...).}
   \item{d}{order of differenciation.}
-  \item{sigmaH}{std dev of the observation disturbance.}
-  \item{sigmaQ}{std dev of the state disturbances.}
+  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{sigmaQ}{std dev of the state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
   \item{name}{an optional name to be given to the resulting DLM.}
 }
 \details{
@@ -28,12 +28,6 @@ where \eqn{L} is the lag operator.
 
 The initial value \code{P0inf} is parametered to use exact diffuse initialisation
 (if supported by the back-end).
-
-Remember: all functions of this package assume by default a zero state
-disturbance (deterministic states). By looking at the prototype
-for this function, you can assume sigmaH refers to the observation and sigmaQ
-refers to the state. This rule of thumb is useful to remember how this function
-should be used.
 }
 \value{
 An object of class \code{dlmodeler} representing the ARIMA model.

@@ -8,12 +8,14 @@ Builds an univariate polynomial DLM of the specified order.
 }
 \usage{
 dlmodeler.build.polynomial(ord, sigmaH = NA, sigmaQ = 0,
-                           name = "polynomial")
+                           name = ifelse(ord==0,'level',
+                           ifelse(ord==1,'level+trend',
+                           'polynomial')))
 }
 \arguments{
-  \item{ord}{order of the polynomial (\eqn{0} = constant, \eqn{1} = linear, ...).}
-  \item{sigmaH}{std dev of the observation disturbance.}
-  \item{sigmaQ}{std dev of the state disturbances.}
+  \item{ord}{order of the polynomial (\eqn{0} = constant, \eqn{1} = linear, \eqn{2} = cubic...).}
+  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{sigmaQ}{std dev of the state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
   \item{name}{an optional name to be given to the resulting DLM.}
 }
 \details{
@@ -22,12 +24,6 @@ The polynomial term is of the form
 
 The initial value \code{P0inf} is parametered to use exact diffuse initialisation
 (if supported by the back-end).
-
-Remember: all functions of this package assume by default a zero state
-disturbance (deterministic states). By looking at the prototype
-for this function, you can assume sigmaH refers to the observation and sigmaQ
-refers to the state. This rule of thumb is useful to remember how this function
-should be used.
 }
 \value{
 An object of class \code{dlmodeler} representing the polynomial model.
@@ -53,6 +49,7 @@ State representations are generally not unique, so other forms could be used to 
 \code{\link{dlmodeler.build.regression}}
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # generate some quarterly data
@@ -71,6 +68,7 @@ f <- dlmodeler.filter(y, mod)
 # show the one step ahead forecasts
 plot(y,type='l')
 lines(f$f[1,],col='light blue')
+}
 }
 \keyword{ dlm }
 \keyword{ polynomial }

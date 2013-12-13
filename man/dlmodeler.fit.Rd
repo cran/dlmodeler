@@ -122,6 +122,7 @@ values.
 \code{\link{dlmodeler.forecast}}
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # analysis from Durbin & Koopman book page 32
@@ -159,6 +160,7 @@ s.ce <- dlmodeler.extract(f$smooth, fit$model,
 plot(y[1,],type='l')
 lines(f.ce$p32[1,],col='light blue',lty=2)
 lines(s.ce$p32[1,],col='dark blue')
+}
 }
 \keyword{ dlm }
 \keyword{ fit }

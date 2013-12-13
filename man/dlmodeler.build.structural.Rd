@@ -12,31 +12,25 @@ and an observation disturbance.
 }
 \usage{
 dlmodeler.build.structural(pol.order = NULL, dseas.order = NULL,
-                           tseas.order = NULL, tseas.period = NULL,
+                           tseas.period = NULL, tseas.order = NULL,
                            sigmaH = NA, pol.sigmaQ = 0,
                            dseas.sigmaQ = 0, tseas.sigmaQ = 0,
                            name = "structural")
 }
 \arguments{
-  \item{pol.order}{order of the polynomial (0=constant, 1=linear, ...), or \code{NULL}.}
-  \item{dseas.order}{period of the dummy seasonal pattern, or \code{NULL}.}
-  \item{tseas.order}{number of harmonics in the trigonometric seasonal pattern, or \code{NULL}.}
-  \item{tseas.period}{period of the trigonometric seasonal pattern, or \code{NULL}.}
-  \item{sigmaH}{std dev of the observation disturbance.}
-  \item{pol.sigmaQ}{std dev of the polynomial state disturbances.}
-  \item{dseas.sigmaQ}{std dev of the dummy seasonal state disturbances.}
-  \item{tseas.sigmaQ}{std dev of the trigonometric seasonal state disturbances.}
+  \item{pol.order}{order of the polynomial (0=constant, 1=linear, 2=cubic...), or \code{NULL} to ignore polynomial component.}
+  \item{dseas.order}{period of the dummy seasonal pattern, or \code{NULL} to ignore dummy seasonal component.}
+  \item{tseas.period}{period of the trigonometric seasonal pattern, or \code{NULL} to ignore trigonometric component.}
+  \item{tseas.order}{number of harmonics in the trigonometric seasonal pattern, or \code{NULL}. Optional when tseas.period is an integer (a default value is used), mandatory otherwise.}
+  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{pol.sigmaQ}{std dev of the polynomial state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{dseas.sigmaQ}{std dev of the dummy seasonal state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{tseas.sigmaQ}{std dev of the trigonometric seasonal state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
   \item{name}{an optional name to be given to the resulting DLM.}
 }
 \details{
 The initial value \code{P0inf} is parametered to use exact diffuse initialisation
 (if supported by the back-end). 
-
-Remember: all functions of this package assume by default a zero state
-disturbance (deterministic states). By looking at the prototype
-for this function, you can assume sigmaH refers to the observation and sigmaQ
-refers to the state. This rule of thumb is useful to remember how this function
-should be used.
 }
 \value{
 An object of class \code{dlmodeler} representing the structural model.
@@ -45,7 +39,7 @@ This object can have the following components:
 \item{level+trend}{component representing the level+trend (when \code{pol.order} = 1)}
 \item{polynomial}{component representing the level, trend, ... (when \code{pol.order} > 1)}
 \item{seasonal}{component representing the dummy seasonal pattern}
-\item{cycle}{component representing the trigonometric seasonal cycle}
+\item{trigonometric}{component representing the trigonometric seasonal pattern}
 }
 \references{
 Durbin, and Koopman, Time Series Analysis by State Space Methods, Oxford University Press (2001),
@@ -68,6 +62,7 @@ State representations are not unique, so other forms could be used to achieve th
 \code{\link{dlmodeler.build.regression}}
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # generate some quarterly data
@@ -91,6 +86,7 @@ lines(f$f[1,],col='light blue')
 c <- dlmodeler.extract(f,mod,type="state")
 lines(c$level[1,],col='blue')
 plot(c$seasonal[1,],type='l',col='dark green')
+}
 }
 \keyword{ dlm }
 \keyword{ structural }

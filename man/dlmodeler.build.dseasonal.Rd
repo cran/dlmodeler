@@ -12,8 +12,8 @@ dlmodeler.build.dseasonal(ord, sigmaH = NA, sigmaQ = 0,
 }
 \arguments{
   \item{ord}{period of the seasonal pattern.}
-  \item{sigmaH}{std dev of the observation disturbance.}
-  \item{sigmaQ}{std dev of the state disturbance.}
+  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{sigmaQ}{std dev of the state disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
   \item{name}{an optional name to be given to the resulting DLM.}
 }
 \details{
@@ -25,12 +25,6 @@ This only requires \code{ord}-1 state variables.
 
 The initial value \code{P0inf} is parametered to use exact diffuse initialisation
 (if supported by the back-end).
-
-Remember: all functions of this package assume by default a zero state
-disturbance (deterministic states). By looking at the prototype
-for this function, you can assume sigmaH refers to the observation and sigmaQ
-refers to the state. This rule of thumb is useful to remember how this function
-should be used.
 }
 \value{
 An object of class \code{dlmodeler} representing the dummy seasonal model.
@@ -56,6 +50,7 @@ State representations are not unique, so other forms could be used to achieve th
 \code{\link{dlmodeler.build.regression}}
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # generate some quarterly data
@@ -74,6 +69,7 @@ f <- dlmodeler.filter(y, mod)
 # show the one step ahead forecasts
 plot(y,type='l')
 lines(f$f[1,],col='light blue')
+}
 }
 \keyword{ dlm }
 \keyword{ seasonal }

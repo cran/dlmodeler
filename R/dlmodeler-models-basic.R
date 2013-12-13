@@ -2,7 +2,7 @@
 # basic models
 
 dlmodeler.build.polynomial <-
-		function(ord, sigmaH=NA, sigmaQ=0, name='polynomial')
+function(ord, sigmaH=NA, sigmaQ=0, name=ifelse(ord==0,'level',ifelse(ord==1,'level+trend','polynomial')))
 {
 	if( ord<0 ) stop("Order must be >= 0")
 	m <- ord+1
@@ -59,7 +59,7 @@ dlmodeler.build.tseasonal <-
 		function(per, ord=NULL, sigmaH=NA, sigmaQ=0, name='tseasonal')
 {
 	if( per<=0 ) stop("Period must be > 0")
-	if( ((per%%1)!=0) & is.null(ord) ) stop("Order of the trigonometric decomposition must be specified")
+	if( ((per%%1)!=0) & is.null(ord) ) stop("Order of the trigonometric decomposition must be specified when period is not an integer")
 	if( is.null(ord) ) m <- per-1 else m <- 2*ord
 	if( (m%%1) != 0 ) stop("Order of the trigonopetric decomposition must be an integer value")
 	d <- 1
@@ -92,7 +92,7 @@ dlmodeler.build.tseasonal <-
 
 
 dlmodeler.build.structural  <-
-		function(pol.order=NULL, dseas.order=NULL, tseas.order=NULL, tseas.period=NULL,
+		function(pol.order=NULL, dseas.order=NULL, tseas.period=NULL, tseas.order=NULL,
 				sigmaH=NA, pol.sigmaQ=0, dseas.sigmaQ=0, tseas.sigmaQ=0, name='structural')
 {
 	if( !is.null(pol.order) ) {
@@ -102,7 +102,7 @@ dlmodeler.build.structural  <-
 		mdl1 <- dlmodeler.build.polynomial(pol.order,sigmaH,pol.sigmaQ,name=pol.name)
 	} else mdl1 <- NULL
 	if( !is.null(dseas.order) ) mdl2 <- dlmodeler.build.dseasonal(dseas.order,0,dseas.sigmaQ,name='seasonal') else mdl2 <- NULL
-	if( !is.null(tseas.order) ) mdl3 <- dlmodeler.build.tseasonal(tseas.period,tseas.order,0,tseas.sigmaQ,name='cycle') else mdl3 <- NULL
+	if( !is.null(tseas.period) ) mdl3 <- dlmodeler.build.tseasonal(tseas.period,tseas.order,0,tseas.sigmaQ,name='trigonometric') else mdl3 <- NULL
 	return(dlmodeler.add(mdl1,dlmodeler.add(mdl2,mdl3),name=name))
 }
 

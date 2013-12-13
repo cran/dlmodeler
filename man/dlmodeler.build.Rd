@@ -55,6 +55,7 @@ Cyrille Szymanski <cnszym@gmail.com>
 \code{\link{dlmodeler.build.regression}}
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # a stochastic level+trend DLM
@@ -80,5 +81,6 @@ mod <- dlmodeler.build(dimensions=c(4,3,2))
 mod
 # check if it is valid
 dlmodeler.check(mod)$status
+}
 }
 \keyword{ dlm }

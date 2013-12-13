@@ -19,16 +19,16 @@ mod <- dlmodeler.build(
 )
 
 print(mod)
-dlmodeler.check(mod)$status==TRUE
-dlmodeler.check(mod)$m==2
-dlmodeler.check(mod)$r==2
-dlmodeler.check(mod)$d==1
-dlmodeler.check(mod)$timevar==FALSE
-is.na(dlmodeler.check(mod)$timevar.Tt)
-is.na(dlmodeler.check(mod)$timevar.Rt)
-is.na(dlmodeler.check(mod)$timevar.Qt)
-is.na(dlmodeler.check(mod)$timevar.Zt)
-is.na(dlmodeler.check(mod)$timevar.Ht)
+if(!(dlmodeler.check(mod)$status==TRUE)) stop("unit test failed")
+if(!(dlmodeler.check(mod)$m==2)) stop("unit test failed")
+if(!(dlmodeler.check(mod)$r==2)) stop("unit test failed")
+if(!(dlmodeler.check(mod)$d==1)) stop("unit test failed")
+if(!(dlmodeler.check(mod)$timevar==FALSE)) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Tt))) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Rt))) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Qt))) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Zt))) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Ht))) stop("unit test failed")
 
 
 # an empty DLM with 4 state variables (3 of which are stochastic)
@@ -36,16 +36,16 @@ is.na(dlmodeler.check(mod)$timevar.Ht)
 mod <- dlmodeler.build(dimensions=c(4,3,2))
 
 print(mod)
-dlmodeler.check(mod)$status==TRUE
-dlmodeler.check(mod)$m==4
-dlmodeler.check(mod)$r==3
-dlmodeler.check(mod)$d==2
-dlmodeler.check(mod)$timevar==FALSE
-is.na(dlmodeler.check(mod)$timevar.Tt)
-is.na(dlmodeler.check(mod)$timevar.Rt)
-is.na(dlmodeler.check(mod)$timevar.Qt)
-is.na(dlmodeler.check(mod)$timevar.Zt)
-is.na(dlmodeler.check(mod)$timevar.Ht)
+if(!(dlmodeler.check(mod)$status==TRUE)) stop("unit test failed")
+if(!(dlmodeler.check(mod)$m==4)) stop("unit test failed")
+if(!(dlmodeler.check(mod)$r==3)) stop("unit test failed")
+if(!(dlmodeler.check(mod)$d==2)) stop("unit test failed")
+if(!(dlmodeler.check(mod)$timevar==FALSE)) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Tt))) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Rt))) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Qt))) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Zt))) stop("unit test failed")
+if(!(is.na(dlmodeler.check(mod)$timevar.Ht))) stop("unit test failed")
 
 
 # operations on matrices
@@ -53,25 +53,29 @@ v1 <- matrix(1:9,nrow=3,ncol=3)
 v2 <- array(1:18,dim=c(3,3,2))
 
 m1 <- dlmodeler:::dlmodeler.timevar.fun(v1,v1,function(x,y) x+y)
-sum(abs(m1-v1-v1))==0
+if(!(sum(abs(m1-v1-v1))==0)) stop("unit test failed")
 m21 <- dlmodeler:::dlmodeler.timevar.fun(v2,v1,function(x,y) x+y)
-sum(abs(m21[,,1]-v1-v1))==0
-sum(abs(m21[,,2]-v1-v1-9))==0
+if(!(sum(abs(m21[,,1]-v1-v1))==0)) stop("unit test failed")
+if(!(sum(abs(m21[,,2]-v1-v1-9))==0)) stop("unit test failed")
 m22 <- dlmodeler:::dlmodeler.timevar.fun(v1,v2,function(x,y) x+y)
-sum(abs(m22[,,1]-m21[,,1]))==0
-sum(abs(m22[,,2]-m21[,,2]))==0
+if(!(sum(abs(m22[,,1]-m21[,,1]))==0)) stop("unit test failed")
+if(!(sum(abs(m22[,,2]-m21[,,2]))==0)) stop("unit test failed")
 m3 <- dlmodeler:::dlmodeler.timevar.fun(v2,v1,function(x,y) x+y)
-sum(abs(m3[,,1]-v1-v1))==0
-sum(abs(m3[,,2]-v1-matrix(10:18,nrow=3,ncol=3)))==0
+if(!(sum(abs(m3[,,1]-v1-v1))==0)) stop("unit test failed")
+if(!(sum(abs(m3[,,2]-v1-matrix(10:18,nrow=3,ncol=3)))==0)) stop("unit test failed")
 
 mt <- matrix(c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,0,0,0,9,9,9,0,0,0,9,9,9),nrow=6,ncol=6)
 md <- dlmodeler:::dlmodeler.timevar.fun(v1,v2,dlmodeler:::dlmodeler.bdiag)
-sum(abs(md[,,2]-md[,,1]-mt))==0
+if(!(sum(abs(md[,,2]-md[,,1]-mt))==0)) stop("unit test failed")
 
 
+#####################################
+# univariate and time-varying tests #
+#####################################
 # this example is fairly complete, covers 'add', 'filter', 'smooth'
 # 'extract', 'polynomial', 'dseasonal', 'tseasonal', 'regression'
 # test it with various backends
+
 # generate some data
 set.seed(19820605)
 N <- 365*10
@@ -105,10 +109,10 @@ test.backend <- function(backend)
 	par(mfrow=c(2,1))
 	
 	# show the one step ahead forecasts & 99\% prediction intervals
-	plot(y,xlim=c(N-10,N+30))
-	lines(m.obs.int$mymodel$upper[1,],col='light grey')
-	lines(m.obs.int$mymodel$lower[1,],col='light grey')
-	lines(m.obs.int$mymodel$mean[1,],col=2)
+	#plot(y,xlim=c(N-10,N+30))
+	#lines(m.obs.int$mymodel$upper[1,],col='light grey')
+	#lines(m.obs.int$mymodel$lower[1,],col='light grey')
+	#lines(m.obs.int$mymodel$mean[1,],col=2)
 	
 	# see to which values the filter has converged:
 	test.ok <- test.ok & abs(m.state.mean$level[,N]-pi)/pi < .05 # should be close to pi
@@ -118,25 +122,25 @@ test.backend <- function(backend)
 	test.ok <- test.ok & abs(m.state.mean$reg[,N]-exp(1))/exp(1) < .05 # should be close to e
 	
 	# show the filtered level+year components
-	plot(m.obs.mean$level[1,]+m.obs.mean$year[1,],
-			type='l',ylim=c(pi-2,pi+2),col='light green',
-			ylab="smoothed & filtered level+year")
+	#plot(m.obs.mean$level[1,]+m.obs.mean$year[1,],
+	#		type='l',ylim=c(pi-2,pi+2),col='light green',
+	#		ylab="smoothed & filtered level+year")
 	
 	if(backend!='FKF') {
 		system.time(s <- dlmodeler.smooth(f))
 	
 		# show the smoothed level+year components
 		s.obs.mean <- dlmodeler.extract(s,m,type="observation",value="mean")
-		lines(s.obs.mean$level[1,]+s.obs.mean$year[1,],type='l',
-			ylim=c(pi-2,pi+2),col='dark green')
+		#lines(s.obs.mean$level[1,]+s.obs.mean$year[1,],type='l',
+		#	ylim=c(pi-2,pi+2),col='dark green')
 	}
 	
 	return(test.ok)
 }
 
-test.backend('KFAS')
-test.backend('FKF')
-test.backend('dlm')
+if(!(test.backend('KFAS'))) stop("KFAS unit test failed")
+if(!(test.backend('FKF'))) stop("FKF unit test failed")
+if(!(test.backend('dlm'))) stop("dlm unit test failed")
 
 
 
@@ -274,6 +278,48 @@ mean(abs(fcst.MLE$yhat-fcst.MLE$y)) < 100
 mean(abs(fcst.MSE$yhat-fcst.MSE$y)) < 100
 mean(abs(fcst.MAD$yhat-fcst.MAD$y)) < 100
 mean(abs(fcst.MAPE$yhat-fcst.MAPE$y)) < 100
+
+#
+# user-inspired non regression tests
+#
+
+# fitting CAPM
+Xvar <- rnorm(1000)
+Yvar <- rnorm(1000)+2*Xvar
+
+build.fun <- function(p) {
+  dlmodeler.build.regression(
+    matrix(Xvar,nrow=1),
+    sigmaQ = exp(p[1]),
+    sigmaH = 0,
+    intercept = TRUE,
+    name='beta'
+  ) 
+}
+
+system.time(dlmodeler.filter(Yvar, build.fun(0), backend='KFAS', logLik=T, filter=F))
+system.time(dlmodeler.filter(Yvar, build.fun(0), backend='FKF', logLik=T, filter=F))
+system.time(dlmodeler.filter(Yvar, build.fun(0), backend='dlm', logLik=T, filter=F))
+
+system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'KFAS', verbose = TRUE))
+system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'FKF', verbose = TRUE))
+system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'dlm', verbose = TRUE))
+
+# fitting random walk + regression
+t <- (1:100)/pi
+Xi <- rnorm(100)
+
+# generate some data according to the model Yt = alpha(t) + b * Xi
+y <- sin(t) + 1.44*Xi
+
+model.1 <- dlmodeler.build.polynomial(ord=0,sigmaQ=NA)
+model.2 <- dlmodeler.build.regression(matrix(Xi,nrow=1), intercept=FALSE)
+model <- dlmodeler.add(model.1, model.2)
+fit <- dlmodeler.fit(y, model)
+
+plot(t,y,type='l')
+lines(t,fit$filtered$f, col="red")
+cat("Estimate of b: ", fit$filtered$at[2,101])
 
 
 #

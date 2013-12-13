@@ -37,35 +37,29 @@ dlmodeler.filter.dlm <-
 				GG=model$Tt,
 				W=Ht)
 	}
-	# dlm has currently no way of computing logLik and filtering at the
-	# same time, so dlmFilter and dlmLL are only called on request
+	# only filter if needed
 	if( filter ) {
 		res <- dlm::dlmFilter(t(yt),mdlm,simplify=!raw.result)
 		res.Pt <- dlm::dlmSvd2var(res$U.R,res$D.R)
 		Pt <- array(NA,dim=c(NROW(Ht),NCOL(Ht),length(res.Pt)))
 		for( i in 1:length(res.Pt) ) Pt[,,i] <- res.Pt[[i]]
+    f <- t(res$f)
+    at <- t(res$a)
 	} else {
-		res <- NA
-		Pt <- NA
+	  f <- NA
+	  at <- NA
+	  Pt <- NA
+	  res <- NA
 	}
-	if( raw.result ) raw.res <- res else raw.res <- NA
+  # only compute log likelihood if needed
+	# note: dlm currently does not compute the log likelihood when filtering
+  # so it needs to be computed separately
 	if( logLik ) logLik <- dlm::dlmLL(yt,mdlm) else logLik <- NA
-	
-	## if( length(dim(model$Zt))==2 ) {
-	##     # 1-step ahead prediction when observation matrix is not time-varying
-	##     fm <- model$Zt %*% t(res$m)
-	##     fa <- model$Zt %*% t(res$a)
-	## } else {
-	##     # 1-step ahead prediction when observation matrix is time-varying
-	##     fm <- matrix(NA,NROW(model$Zt),NCOL(yt))
-	##     fa <- matrix(NA,NROW(model$Zt),NCOL(yt))
-	##     for( i in 1:NCOL(yt) ) fm[,i] <- model$Zt[,,i] %*% t(res$m[,i])
-	##     for( i in 1:NCOL(yt) ) fa[,i] <- model$Zt[,,i] %*% t(res$a[,i])
-	## }
+	if( raw.result ) raw.res <- res else raw.res <- NA
 	
 	return(list(backend='dlm',
-					f=t(res$f), ## fm=fm, fa=fa,
-					at=t(res$a),
+					f=f,
+					at=at,
 					Pt=Pt,
 					logLik=logLik,
 					d=0,

@@ -194,6 +194,7 @@ Other software of interest (in alphabetical order):
 }
 }
 \examples{
+\dontrun{
 require(dlmodeler)
 
 # This section illustrates most of the possibilities offered by the
@@ -450,4 +451,5 @@ plot(state.intervals$seasonal$mean[1,],
      type='l',col='dark green')
 lines(state.intervals$seasonal$lower[1,],col='light grey')
 lines(state.intervals$seasonal$upper[1,],col='light grey')
+}
 }
