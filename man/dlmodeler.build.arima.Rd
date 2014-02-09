@@ -1,5 +1,6 @@
 \name{dlmodeler.build.arima}
 \alias{dlmodeler.build.arima}
+\alias{dlmodeler.arima}
 \title{
 Build an ARIMA model
 }
@@ -7,6 +8,10 @@ Build an ARIMA model
 Builds an univariate ARIMA DLM of the specified order and coefficients.
 }
 \usage{
+dlmodeler.arima(ar=c(), ma=c(), d=0,
+                sigmaH = NA, sigmaQ = 0,
+                name = "arima")
+
 dlmodeler.build.arima(ar=c(), ma=c(), d=0,
                       sigmaH = NA, sigmaQ = 0,
                       name = "arima")
@@ -15,8 +20,8 @@ dlmodeler.build.arima(ar=c(), ma=c(), d=0,
   \item{ar}{vector of autoregressive coefficients c(ar1, ar2, ar3...).}
   \item{ma}{vector of moving average coefficients c(ma1, ma2, ma3...).}
   \item{d}{order of differenciation.}
-  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
-  \item{sigmaQ}{std dev of the state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it). Default = NA.}
+  \item{sigmaQ}{std dev of the state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it). Default = 0.}
   \item{name}{an optional name to be given to the resulting DLM.}
 }
 \details{

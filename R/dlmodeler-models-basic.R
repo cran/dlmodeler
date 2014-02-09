@@ -1,7 +1,7 @@
 # Author: cns
 # basic models
 
-dlmodeler.build.polynomial <-
+dlmodeler.polynomial <-
 function(ord, sigmaH=NA, sigmaQ=0, name=ifelse(ord==0,'level',ifelse(ord==1,'level+trend','polynomial')))
 {
 	if( ord<0 ) stop("Order must be >= 0")
@@ -26,7 +26,17 @@ function(ord, sigmaH=NA, sigmaQ=0, name=ifelse(ord==0,'level',ifelse(ord==1,'lev
 
 
 
-dlmodeler.build.dseasonal <-
+dlmodeler.constant <-
+function(cst,name="constant") {
+  ret <- dlmodeler.build.polynomial(ord=0,sigmaH=0,sigmaQ=0,name=name)
+  ret$a0[1,1] <- cst
+  ret$P0inf[1,1] <- 0
+  return(ret)
+}
+
+
+
+dlmodeler.dseasonal <-
 		function(ord, sigmaH=NA, sigmaQ=0, name='dseasonal')
 {
 	if( ord<2 ) stop("Order must be >= 2")
@@ -55,7 +65,7 @@ dlmodeler.build.dseasonal <-
 
 
 
-dlmodeler.build.tseasonal <-
+dlmodeler.tseasonal <-
 		function(per, ord=NULL, sigmaH=NA, sigmaQ=0, name='tseasonal')
 {
 	if( per<=0 ) stop("Period must be > 0")
@@ -91,7 +101,7 @@ dlmodeler.build.tseasonal <-
 
 
 
-dlmodeler.build.structural  <-
+dlmodeler.structural  <-
 		function(pol.order=NULL, dseas.order=NULL, tseas.period=NULL, tseas.order=NULL,
 				sigmaH=NA, pol.sigmaQ=0, dseas.sigmaQ=0, tseas.sigmaQ=0, name='structural')
 {
@@ -103,12 +113,14 @@ dlmodeler.build.structural  <-
 	} else mdl1 <- NULL
 	if( !is.null(dseas.order) ) mdl2 <- dlmodeler.build.dseasonal(dseas.order,0,dseas.sigmaQ,name='seasonal') else mdl2 <- NULL
 	if( !is.null(tseas.period) ) mdl3 <- dlmodeler.build.tseasonal(tseas.period,tseas.order,0,tseas.sigmaQ,name='trigonometric') else mdl3 <- NULL
-	return(dlmodeler.add(mdl1,dlmodeler.add(mdl2,mdl3),name=name))
+	ret <- mdl1+mdl2+mdl3
+  ret$name <- name
+  return(ret)
 }
 
 
 
-dlmodeler.build.arima <-
+dlmodeler.arima <-
 		function(ar=c(), ma=c(), d=0, sigmaH=NA, sigmaQ=0, name='arima')
 {
 	if( d>0 ) stop("case where d>0 is not implemented yet") # TODO
@@ -133,7 +145,7 @@ dlmodeler.build.arima <-
 
 
 
-dlmodeler.build.regression <-
+dlmodeler.regression <-
 		function(covariates, sigmaH=NA, sigmaQ=0, intercept=FALSE, name='regression')
 {
 	# covariates must be in hoirontal format (1 row per covariate, as y is formatted)
@@ -160,3 +172,23 @@ dlmodeler.build.regression <-
 }
 
 
+
+# classical models
+stochastic.level <- function(name="stochastic level") dlmodeler.polynomial(0, sigmaH=0, sigmaQ=NA, name=name)
+stochastic.trend <- function(name="stochastic trend") dlmodeler.polynomial(1, sigmaH=0, sigmaQ=c(0,NA), name=name)
+stochastic.season <- function(ord, name="stochastic season") dlmodeler.dseasonal(ord, sigmaH=0, sigmaQ=NA, name=name)
+random.walk <- function(name="random walk") stochastic.level(name)
+deterministic.level <- function(name="deterministic level") dlmodeler.polynomial(0, sigmaH=0, sigmaQ=0, name=name)
+deterministic.trend <- function(name="deterministic trend") dlmodeler.polynomial(1, sigmaH=0, sigmaQ=0, name=name)
+deterministic.season <- function(ord, name="deterministic season") dlmodeler.dseasonal(ord, sigmaH=0, sigmaQ=0, name=name)
+
+
+
+# old function names
+dlmodeler.build.polynomial <- dlmodeler.polynomial
+dlmodeler.build.constant <- dlmodeler.constant
+dlmodeler.build.dseasonal <- dlmodeler.dseasonal
+dlmodeler.build.tseasonal <- dlmodeler.tseasonal
+dlmodeler.build.structural <- dlmodeler.structural
+dlmodeler.build.arima <- dlmodeler.arima
+dlmodeler.build.regression <- dlmodeler.regression

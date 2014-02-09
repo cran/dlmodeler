@@ -1,5 +1,8 @@
 \name{dlmodeler.build.dseasonal}
 \alias{dlmodeler.build.dseasonal}
+\alias{dlmodeler.dseasonal}
+\alias{stochastic.season}
+\alias{deterministic.season}
 \title{
 Build a "dummy seasonal" model
 }
@@ -7,13 +10,20 @@ Build a "dummy seasonal" model
 Builds an univariate "dummy seasonal" DLM of the specified order.
 }
 \usage{
+dlmodeler.dseasonal(ord, sigmaH = NA, sigmaQ = 0,
+                    name = "dseasonal")
+
+deterministic.season(ord, name="deterministic season")
+stochastic.season(ord, name="stochastic season")
+
+# old function name
 dlmodeler.build.dseasonal(ord, sigmaH = NA, sigmaQ = 0,
                           name = "dseasonal")
 }
 \arguments{
   \item{ord}{period of the seasonal pattern.}
-  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
-  \item{sigmaQ}{std dev of the state disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it). Default = NA.}
+  \item{sigmaQ}{std dev of the state disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it). Default = 0.}
   \item{name}{an optional name to be given to the resulting DLM.}
 }
 \details{
@@ -25,6 +35,12 @@ This only requires \code{ord}-1 state variables.
 
 The initial value \code{P0inf} is parametered to use exact diffuse initialisation
 (if supported by the back-end).
+
+The deterministic season model, is a special case of the dseasonal model,
+where \code{sigmaH=0} and \code{sigmaQ=0}.
+
+The stochastic season model, is a special case of the dseasonal model,
+where \code{sigmaH=0} and \code{sigmaQ=NA}.
 }
 \value{
 An object of class \code{dlmodeler} representing the dummy seasonal model.
@@ -61,9 +77,8 @@ season <- c(5,6,8,2)
 y <- level + rep(season,n/4) + rnorm(n, mean=0, sd=sigma)
 
 # deterministic level + quarterly seasonal + disturbance
-mod1 <- dlmodeler.build.polynomial(0,sigmaH=sigma)
-mod2 <- dlmodeler.build.dseasonal(4,sigmaH=0)
-mod <- dlmodeler.add(mod1, mod2)
+mod <- dlmodeler.build.polynomial(0,sigmaH=sigma) +
+       dlmodeler.build.dseasonal(4,sigmaH=0)
 f <- dlmodeler.filter(y, mod)
 
 # show the one step ahead forecasts

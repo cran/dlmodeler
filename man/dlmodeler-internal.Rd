@@ -9,6 +9,8 @@
 \alias{dlmodeler.build.unknowns}
 \alias{dlmodeler.build.function}
 \alias{dlmodeler.countweekdays}
+\alias{dlmodeler.build.constant}
+\alias{dlmodeler.constant}
 \title{
 For internal use only
 }

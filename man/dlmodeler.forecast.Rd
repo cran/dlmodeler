@@ -73,9 +73,8 @@ y <- matrix(y,nrow=1)
 build.fun <- function(p) {
 	sigmaH <- exp(p[1])
 	sigmaQ <- exp(p[2])*sigmaH
-	mod1 <- dlmodeler.build.polynomial(0,sigmaH=sigmaH,sigmaQ=sigmaQ)
-	mod2 <- dlmodeler.build.dseasonal(4,sigmaH=0)
-	mod <- dlmodeler.add(mod1, mod2)
+	mod <- dlmodeler.build.polynomial(0,sigmaH=sigmaH,sigmaQ=sigmaQ) +
+         dlmodeler.build.dseasonal(4,sigmaH=0)
 	return(mod)
 }
 fit <- dlmodeler.fit.MLE(y, build.fun, c(0,0))

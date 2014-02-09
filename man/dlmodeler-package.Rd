@@ -160,6 +160,8 @@ Durbin, J. and Koopman, S. J. Time Series Analysis by State Space Methods. Oxfor
 Commandeur, and Koopman, An Introduction to State Space Time Series Analysis, Oxford University Press (2007).
 
 Petris, Petrone, and Campagnoli, Dynamic Linear Models with R, Springer (2009).
+
+Brockwell, P. J. & Davis, R. A. Introduction to Time Series and Forecasting. Springer, New York (1996). Sections 8.2 and 8.5.
 }
 \keyword{ dlm }
 \keyword{ forecast }
@@ -334,7 +336,8 @@ m3 <- dlmodeler.build.regression(
 		petrolprice,
 		sigmaQ=0,
 		name='petrolprice')
-mod <- dlmodeler.add(dlmodeler.add(m1,m2),m3,name='p166')
+mod <- m1+m2+m3
+mod$name <- 'p166'
 
 # fit the model by maximum likelihood estimation
 fit <- dlmodeler.fit(y, mod, method="MLE")

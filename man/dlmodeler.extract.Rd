@@ -89,12 +89,11 @@ y <- pi + cos(2*pi*t/365.25) + .25*sin(2*pi*t/365.25*3) +
      exp(1)*a + rnorm(N+365,0,.5)
 
 # build a model for this data
-m1 <- dlmodeler.build.polynomial(0,sigmaH=.5,name='level')
-m2 <- dlmodeler.build.dseasonal(7,sigmaH=0,name='week')
-m3 <- dlmodeler.build.tseasonal(365.25,3,sigmaH=0,name='year')
-m4 <- dlmodeler.build.regression(a,sigmaH=0,name='reg')
-m <- dlmodeler.add(m1,dlmodeler.add(m2,dlmodeler.add(m3,m4)),
-                   name='mymodel')
+m <- dlmodeler.build.polynomial(0,sigmaH=.5,name='level') +
+     dlmodeler.build.dseasonal(7,sigmaH=0,name='week') +
+     dlmodeler.build.tseasonal(365.25,3,sigmaH=0,name='year') +
+     dlmodeler.build.regression(a,sigmaH=0,name='reg')
+m$name <- 'mymodel'
 
 system.time(f <- dlmodeler.filter(y, m, raw.result=TRUE))
 

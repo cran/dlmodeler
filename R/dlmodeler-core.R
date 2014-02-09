@@ -200,65 +200,99 @@ function(x, y)
 
 
 dlmodeler.add <-
-function(mod1, mod2, name=NULL)
+function(e1, e2, name=NULL)
 {
-	if( is.null(mod1) ) return(mod2)
-	if( is.null(mod2) ) return(mod1)
-	if( class(mod1)!='dlmodeler' ) stop("mod1 should be of class 'dlmodeler'")
-	if( class(mod2)!='dlmodeler' ) stop("mod2 should be of class 'dlmodeler'")
-	if( is.null(name) ) name <- paste(mod1$name,mod2$name,sep='+')
+	if( is.null(e1) ) return(e2)
+	if( is.null(e2) ) return(e1)
+  if( class(e1)=='numeric' | class(e1)=='integer' )
+    e1 <- dlmodeler.build.constant(e1)
+	if( class(e2)=='numeric' | class(e2)=='integer' )
+	  e2 <- dlmodeler.build.constant(e2)
+	if( class(e1)!='dlmodeler' ) stop("e1 should be of class 'dlmodeler'")
+	if( class(e2)!='dlmodeler' ) stop("e2 should be of class 'dlmodeler'")
+	if( is.null(name) ) name <- paste(e1$name,e2$name,sep='+')
 	
 	# concatenate the state vectors
-	a0 <- rbind(mod1$a0,mod2$a0)
-	P0 <- dlmodeler.bdiag(mod1$P0,mod2$P0)
-	P0inf <- dlmodeler.bdiag(mod1$P0inf,mod2$P0inf)
-	Tt <- dlmodeler.timevar.fun(mod1$Tt,mod2$Tt,dlmodeler.bdiag)
-	Rt <- dlmodeler.timevar.fun(mod1$Rt,mod2$Rt,dlmodeler.bdiag)
-	Qt <- dlmodeler.timevar.fun(mod1$Qt,mod2$Qt,dlmodeler.bdiag)
+	a0 <- rbind(e1$a0,e2$a0)
+	P0 <- dlmodeler.bdiag(e1$P0,e2$P0)
+	P0inf <- dlmodeler.bdiag(e1$P0inf,e2$P0inf)
+	Tt <- dlmodeler.timevar.fun(e1$Tt,e2$Tt,dlmodeler.bdiag)
+	Rt <- dlmodeler.timevar.fun(e1$Rt,e2$Rt,dlmodeler.bdiag)
+	Qt <- dlmodeler.timevar.fun(e1$Qt,e2$Qt,dlmodeler.bdiag)
 	
 	# add outputs together
-	Zt <- dlmodeler.timevar.fun(mod1$Zt,mod2$Zt,cbind)
+	Zt <- dlmodeler.timevar.fun(e1$Zt,e2$Zt,cbind)
 	myaddition <- function(x,y) (x+y)
-	Ht <- dlmodeler.timevar.fun(mod1$Ht,mod2$Ht,myaddition)
+	Ht <- dlmodeler.timevar.fun(e1$Ht,e2$Ht,myaddition)
 	
 	# keep track of components
-	comp1 <- lapply(mod1$components,function(x) rbind(x,matrix(0,NROW(mod2$Tt),1)) )
-	comp2 <- lapply(mod2$components,function(x) rbind(matrix(0,NROW(mod1$Tt),1),x) )
+	comp1 <- lapply(e1$components,function(x) rbind(x,matrix(0,NROW(e2$Tt),1)) )
+	comp2 <- lapply(e2$components,function(x) rbind(matrix(0,NROW(e1$Tt),1),x) )
 	components <- c(comp1,comp2)
 	
 	return(dlmodeler.build(a0=a0,P0=P0,P0inf=P0inf,Tt=Tt,Rt=Rt,Qt=Qt,Zt=Zt,Ht=Ht,name=name,components=components))
 }
+
+"+.dlmodeler" <- function(e1, e2) dlmodeler.add(e1, e2)
 
 
 
 dlmodeler.bind <-
-function(mod1, mod2, name=NULL)
+function(e1, e2, name=NULL)
 {
-	if( is.null(mod1) ) return(mod2)
-	if( is.null(mod2) ) return(mod1)
-	if( class(mod1)!='dlmodeler' ) stop("mod1 should be of class 'dlmodeler'")
-	if( class(mod2)!='dlmodeler' ) stop("mod2 should be of class 'dlmodeler'")
-	if( is.null(name) ) name <- paste(mod1$name,mod2$name,sep='&')
+	if( is.null(e1) ) return(e2)
+	if( is.null(e2) ) return(e1)
+	if( class(e1)!='dlmodeler' ) stop("e1 should be of class 'dlmodeler'")
+	if( class(e2)!='dlmodeler' ) stop("e2 should be of class 'dlmodeler'")
+	if( is.null(name) ) name <- paste(e1$name,e2$name,sep='&')
 	
 	# concatenate the state vectors
-	a0 <- rbind(mod1$a0,mod2$a0)
-	P0 <- dlmodeler.bdiag(mod1$P0,mod2$P0)
-	P0inf <- dlmodeler.bdiag(mod1$P0inf,mod2$P0inf)
-	Tt <- dlmodeler.timevar.fun(mod1$Tt,mod2$Tt,dlmodeler.bdiag)
-	Rt <- dlmodeler.timevar.fun(mod1$Rt,mod2$Rt,dlmodeler.bdiag)
-	Qt <- dlmodeler.timevar.fun(mod1$Qt,mod2$Qt,dlmodeler.bdiag)
+	a0 <- rbind(e1$a0,e2$a0)
+	P0 <- dlmodeler.bdiag(e1$P0,e2$P0)
+	P0inf <- dlmodeler.bdiag(e1$P0inf,e2$P0inf)
+	Tt <- dlmodeler.timevar.fun(e1$Tt,e2$Tt,dlmodeler.bdiag)
+	Rt <- dlmodeler.timevar.fun(e1$Rt,e2$Rt,dlmodeler.bdiag)
+	Qt <- dlmodeler.timevar.fun(e1$Qt,e2$Qt,dlmodeler.bdiag)
 	
 	# concatenate the outputs together
-	Zt <- dlmodeler.timevar.fun(mod1$Zt,mod2$Zt,dlmodeler.bdiag)
-	Ht <- dlmodeler.timevar.fun(mod1$Ht,mod2$Ht,dlmodeler.bdiag)
+	Zt <- dlmodeler.timevar.fun(e1$Zt,e2$Zt,dlmodeler.bdiag)
+	Ht <- dlmodeler.timevar.fun(e1$Ht,e2$Ht,dlmodeler.bdiag)
 	
 	# keep track of components
-	comp1 <- lapply(mod1$components,function(x) rbind(x,matrix(0,NROW(mod2$Tt),1)) )
-	comp2 <- lapply(mod2$components,function(x) rbind(matrix(0,NROW(mod1$Tt),1),x) )
+	comp1 <- lapply(e1$components,function(x) rbind(x,matrix(0,NROW(e2$Tt),1)) )
+	comp2 <- lapply(e2$components,function(x) rbind(matrix(0,NROW(e1$Tt),1),x) )
 	components <- c(comp1,comp2)
 	
 	return(dlmodeler.build(a0=a0,P0=P0,P0inf=P0inf,Tt=Tt,Rt=Rt,Qt=Qt,Zt=Zt,Ht=Ht,name=name,components=components))
 }
+
+"%%.dlmodeler" <- function(e1, e2) dlmodeler.bind(e1, e2)
+
+
+
+dlmodeler.multiply <-
+function(e1, e2)
+{
+  if( is.null(e1) ) return(e2)
+  if( is.null(e2) ) return(e1)
+  
+  if( class(e1)=='dlmodeler' ) {
+    mod <- e1
+    sca <- e2
+  } else if( class(e2)=='dlmodeler' ) {
+    mod <- e2
+    sca <- e1
+  } else stop("either e1 or e2 should be of class 'dlmodeler'")
+  
+  if( class(sca)!='numeric' & class(sca)!='integer' )
+    stop("operand should be of class 'numeric'")
+  
+  mod$Zt <- mod$Zt * sca
+  
+  return(mod)
+}    
+
+"*.dlmodeler" <- function(e1, e2) dlmodeler.multiply(e1, e2)
 
 
 

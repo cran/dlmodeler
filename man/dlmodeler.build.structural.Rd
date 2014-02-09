@@ -1,5 +1,6 @@
 \name{dlmodeler.build.structural}
 \alias{dlmodeler.build.structural}
+\alias{dlmodeler.structural}
 \title{
 Build a structural time series model
 }
@@ -11,21 +12,26 @@ a trigonometric cycle term,
 and an observation disturbance.
 }
 \usage{
+dlmodeler.structural(pol.order = NULL, dseas.order = NULL,
+                     tseas.period = NULL, tseas.order = NULL,
+                     sigmaH = NA, pol.sigmaQ = 0,
+                     dseas.sigmaQ = 0, tseas.sigmaQ = 0,
+                     name = "structural")
+
 dlmodeler.build.structural(pol.order = NULL, dseas.order = NULL,
                            tseas.period = NULL, tseas.order = NULL,
                            sigmaH = NA, pol.sigmaQ = 0,
                            dseas.sigmaQ = 0, tseas.sigmaQ = 0,
-                           name = "structural")
-}
+                           name = "structural")}
 \arguments{
   \item{pol.order}{order of the polynomial (0=constant, 1=linear, 2=cubic...), or \code{NULL} to ignore polynomial component.}
   \item{dseas.order}{period of the dummy seasonal pattern, or \code{NULL} to ignore dummy seasonal component.}
   \item{tseas.period}{period of the trigonometric seasonal pattern, or \code{NULL} to ignore trigonometric component.}
   \item{tseas.order}{number of harmonics in the trigonometric seasonal pattern, or \code{NULL}. Optional when tseas.period is an integer (a default value is used), mandatory otherwise.}
-  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it).}
-  \item{pol.sigmaQ}{std dev of the polynomial state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
-  \item{dseas.sigmaQ}{std dev of the dummy seasonal state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
-  \item{tseas.sigmaQ}{std dev of the trigonometric seasonal state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it).}
+  \item{sigmaH}{std dev of the observation disturbance (if unknown, set to NA and use dlmodeler.fit to estimate it). Default = NA.}
+  \item{pol.sigmaQ}{std dev of the polynomial state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it). Default = 0.}
+  \item{dseas.sigmaQ}{std dev of the dummy seasonal state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it). Default = 0.}
+  \item{tseas.sigmaQ}{std dev of the trigonometric seasonal state disturbances (if unknown, set to NA and use dlmodeler.fit to estimate it). Default = 0.}
   \item{name}{an optional name to be given to the resulting DLM.}
 }
 \details{

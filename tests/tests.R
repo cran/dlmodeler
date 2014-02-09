@@ -68,6 +68,27 @@ mt <- matrix(c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,0,0,0,9,9,9,0,0,0
 md <- dlmodeler:::dlmodeler.timevar.fun(v1,v2,dlmodeler:::dlmodeler.bdiag)
 if(!(sum(abs(md[,,2]-md[,,1]-mt))==0)) stop("unit test failed")
 
+# operators
+m1 <- dlmodeler.build.dseasonal(12)
+m2 <- dlmodeler.build.polynomial(0)
+m3 <- dlmodeler.build.dseasonal(5)
+m4 <- dlmodeler.build.constant(4)
+
+m1+m2+m3
+m1+m2+m3+m4
+m1%%m2%%m3
+m1%%m2%%m3%%m4
+dlmodeler.add(m1,1)
+m1+1+m2
+dlmodeler.add(1,m1)
+1+m1+m2
+dlmodeler.multiply(m2,2)
+m1*5
+dlmodeler.multiply(2,m2)
+5*m1
+2*m1+3*m2+4*m3+5*m4
+(2*m1+3*m2+4*m3+5*m4)$Zt
+
 
 #####################################
 # univariate and time-varying tests #
@@ -89,8 +110,7 @@ m1 <- dlmodeler.build.polynomial(0,sigmaH=.5,name='level')
 m2 <- dlmodeler.build.dseasonal(7,sigmaH=0,name='week')
 m3 <- dlmodeler.build.tseasonal(365.25,3,sigmaH=0,name='year')
 m4 <- dlmodeler.build.regression(a,sigmaH=0,name='reg')
-m <- dlmodeler.add(m1,dlmodeler.add(m2,dlmodeler.add(m3,m4)),
-		name='mymodel')
+m <- m1+m2+m3+m4
 
 test.backend <- function(backend)
 {
@@ -138,10 +158,20 @@ test.backend <- function(backend)
 	return(test.ok)
 }
 
-if(!(test.backend('KFAS'))) stop("KFAS unit test failed")
-if(!(test.backend('FKF'))) stop("FKF unit test failed")
-if(!(test.backend('dlm'))) stop("dlm unit test failed")
+#if(require('KFAS')) {
+#  cat('Found package KFAS. Testing...\n')
+  if(!(test.backend('KFAS'))) stop("KFAS unit test failed")
+#}
 
+if(require('FKF')) {
+  cat('Found package FKF. Testing...\n')
+  if(!(test.backend('FKF'))) stop("FKF unit test failed")
+}
+
+if(require('dlm')) {
+  cat('Found package dlm. Testing...\n')
+  if(!(test.backend('dlm'))) stop("dlm unit test failed")
+}
 
 
 ##################################
@@ -162,9 +192,20 @@ test.backend <- function(backend)
 	mean(abs(filt$f[1,5:100]-ref$f[1,5:100]))
 }
 
-test.backend('KFAS')/mean(yt,na.rm=TRUE) < .05
-test.backend('FKF')/mean(yt,na.rm=TRUE) < .05
-test.backend('dlm')/mean(yt,na.rm=TRUE) < .05
+#if(require('KFAS')) {
+#  cat('Found package KFAS. Testing...\n')
+  test.backend('KFAS')/mean(yt,na.rm=TRUE) < .05
+#}
+
+if(require('FKF')) {
+  cat('Found package FKF. Testing...\n')
+  test.backend('FKF')/mean(yt,na.rm=TRUE) < .05
+}
+
+if(require('dlm')) {
+  cat('Found package dlm. Testing...\n')
+  test.backend('dlm')/mean(yt,na.rm=TRUE) < .05
+}
 
 
 #############################
@@ -205,18 +246,41 @@ test.backend <- function(backend)
 	return(d0.debug+d0.fast+d1.debug+d1.fast)
 }
 
-test.backend('KFAS')/mean(yt,na.rm=TRUE) < 0.05
-test.backend('FKF')/mean(yt,na.rm=TRUE) < 0.05
-test.backend('dlm')/mean(yt,na.rm=TRUE) < 5
+#if(require('KFAS')) {
+#  cat('Found package KFAS. Testing...\n')
+  test.backend('KFAS')/mean(yt,na.rm=TRUE) < 0.05
+#}
+
+if(require('FKF')) {
+  cat('Found package FKF. Testing...\n')
+  test.backend('FKF')/mean(yt,na.rm=TRUE) < 0.05
+}
+
+if(require('dlm')) {
+  cat('Found package dlm. Testing...\n')
+  test.backend('dlm')/mean(yt,na.rm=TRUE) < 5
+}
+
 
 # forecast simulation with a constant model (with diffuse)
 yt <- matrix(c(Nile,rep(NA,12)),nrow=1)
 mod <- dlmodeler.build.polynomial(1,sigmaH=1,sigmaQ=c(exp(-5),exp(-8)),name='mymodel')
 mod$a0 <- c(0,40)
 
-test.backend('KFAS')/mean(yt,na.rm=TRUE) < 0.05
-test.backend('FKF')/mean(yt,na.rm=TRUE) < 0.05
-test.backend('dlm')/mean(yt,na.rm=TRUE) < 5
+#if(require('KFAS')) {
+#  cat('Found package KFAS. Testing...\n')
+  test.backend('KFAS')/mean(yt,na.rm=TRUE) < 0.05
+#}
+
+if(require('FKF')) {
+  cat('Found package FKF. Testing...\n')
+  test.backend('FKF')/mean(yt,na.rm=TRUE) < 0.05
+}
+
+if(require('dlm')) {
+  cat('Found package dlm. Testing...\n')
+  test.backend('dlm')/mean(yt,na.rm=TRUE) < 5
+}
 
 # TODO: tests for 'bind'
 
@@ -297,13 +361,19 @@ build.fun <- function(p) {
   ) 
 }
 
-system.time(dlmodeler.filter(Yvar, build.fun(0), backend='KFAS', logLik=T, filter=F))
-system.time(dlmodeler.filter(Yvar, build.fun(0), backend='FKF', logLik=T, filter=F))
-system.time(dlmodeler.filter(Yvar, build.fun(0), backend='dlm', logLik=T, filter=F))
+#if(require('KFAS'))
+  system.time(dlmodeler.filter(Yvar, build.fun(0), backend='KFAS', logLik=T, filter=F))
+if(require('FKF'))
+  system.time(dlmodeler.filter(Yvar, build.fun(0), backend='FKF', logLik=T, filter=F))
+if(require('dlm'))
+  system.time(dlmodeler.filter(Yvar, build.fun(0), backend='dlm', logLik=T, filter=F))
 
-system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'KFAS', verbose = TRUE))
-system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'FKF', verbose = TRUE))
-system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'dlm', verbose = TRUE))
+#if(require('KFAS'))
+  system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'KFAS', verbose = TRUE))
+if(require('FKF'))
+  system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'FKF', verbose = TRUE))
+if(require('dlm'))
+  system.time(fit <- dlmodeler.fit.MLE(matrix(Yvar,nrow=1), build.fun, c(0), backend = 'dlm', verbose = TRUE))
 
 # fitting random walk + regression
 t <- (1:100)/pi
@@ -320,6 +390,7 @@ fit <- dlmodeler.fit(y, model)
 plot(t,y,type='l')
 lines(t,fit$filtered$f, col="red")
 cat("Estimate of b: ", fit$filtered$at[2,101])
+
 
 
 #

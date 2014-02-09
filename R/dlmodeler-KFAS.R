@@ -4,7 +4,8 @@
 dlmodeler.filter.KFAS <-
 		function(yt, model, raw.result=FALSE, logLik=TRUE, filter=TRUE)
 {
-	if(!require('KFAS')) stop("required package could not be found: KFAS")
+	# KFAS is a dependency
+	# if(!require('KFAS')) stop("required package could not be found: KFAS")
 	kfas.model <- KFAS::SSModel( t(yt) ~ -1 + SSMcustom(
 	  Z=model$Zt, # observation
 	  T=model$Tt, # transition
@@ -58,7 +59,8 @@ dlmodeler.filter.KFAS <-
 dlmodeler.smooth.KFAS <-
 		function(filt, raw.result=FALSE)
 {
-	if(!require('KFAS')) stop("required package could not be found: KFAS")
+	# KFAS is a dependency
+	# if(!require('KFAS')) stop("required package could not be found: KFAS")
 	
 	res <- KFAS::KFS(filt$raw.result$model,smoothing="state") # same function, now smoothing
 	

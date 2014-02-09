@@ -19,7 +19,7 @@ See \code{\link{dlmodeler}} for information about the state-space representation
 adopted in this package.
 }
 \value{
-An array with the following information:
+A list with the following information:
 \item{status}{a boolean indicating whether the model is valid or not}
 \item{m}{dimension of state vector \eqn{m}}
 \item{r}{dimension of state disturbance covariance matrix \eqn{r}}
